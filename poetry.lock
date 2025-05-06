@@ -414,6 +414,27 @@ files = [
 ]
 
 [[package]]
+name = "oscal-pydantic-v2"
+version = "2024.3.20"
+description = "A set of Pydantic models generated from the OSCAL specification."
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "oscal-pydantic-v2-2024.3.20.tar.gz", hash = "sha256:a32da409990e9319604391773dabcb9f18def63477504a9b215d1308f6114514"},
+    {file = "oscal_pydantic_v2-2024.3.20-py3-none-any.whl", hash = "sha256:1e6bcf2aa4dd1c4c64673dc62571afdfd540e48c96a043fec7e356c84405435f"},
+]
+
+[package.dependencies]
+annotated-types = "*"
+dnspython = ">=2.3"
+email-validator = ">=2"
+idna = ">=3.4"
+pydantic = ">=2"
+pydantic-core = ">=2"
+typing-extensions = "*"
+
+[[package]]
 name = "pydantic"
 version = "2.11.4"
 description = "Data validation using Python type hints"
@@ -1020,4 +1041,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13"
-content-hash = "0f7c51ca35256be47c795d3e8fb257e101e16a949b51e575a3cc3337093b11ae"
+content-hash = "c174eb707b8f80848e6ab7693a4e3f364713ba6be01b91f86c8b30d59458d1d1"
