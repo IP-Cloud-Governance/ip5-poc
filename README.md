@@ -1,6 +1,6 @@
 # ip5-poc
 
-This project servces
+This project serves as poc environment for [ip5-documentation](https://github.com/IP-Cloud-Governance/ip5-project-documentation)
 
 ## Setup
 This setup uses python3.13 stable version and poetry as package management tool
