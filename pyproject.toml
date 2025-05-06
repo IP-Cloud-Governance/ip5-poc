@@ -1,0 +1,20 @@
+[project]
+name = "ip5-poc"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "frithjofhoppebit",email = "frithjof.hoppe@bit.admin.ch"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard] (>=0.115.12,<0.116.0)"
+]
+
+[tool.poetry]
+packages = [{include = "ip5_poc", from = "src"}]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
