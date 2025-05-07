@@ -19,19 +19,16 @@ def read_catalog():
     si001_t2 = catalog.Group(
         id="t2",
         title="Technik",
-        parts=[
-            # TODO Somehow schema error
-            # catalog.BasePart(
-            #     id="t2.1_gdn",
-            #     name="guidance",
-            #     prose="Letztlich kann diese Anforderung auch als «Best Practices» verstanden bzw. davon abgeleitet werden. Aufgrund ihrer Wichtigkeit wird sie hier aber separat aufgeführt."
-            # )
-        ],
         controls=[
             catalog.Control(
                 id="t2.1",
                 title="Konfiguration und Einstellungen",
                 parts=[
+                    catalog.BasePart(
+                        id="t2.1_gdn",
+                        name="guidance",
+                        prose="Letztlich kann diese Anforderung auch als «Best Practices» verstanden bzw. davon abgeleitet werden. Aufgrund ihrer Wichtigkeit wird sie hier aber separat aufgeführt."
+                    ),
                     catalog.BasePart(
                         id="t2.1_a_stm",
                         name="statement",
