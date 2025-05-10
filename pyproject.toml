@@ -6,7 +6,7 @@ authors = [
     {name = "frithjofhoppebit",email = "frithjof.hoppe@bit.admin.ch"}
 ]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
     "fastapi[standard] (>=0.115.12,<0.116.0)",
     "oscal-pydantic-v2 (>=2024.3.20,<2025.0.0)"

@@ -12,7 +12,7 @@ sudo apt install python3.13 python3.13-venv
 source .venv/bin/activate
 
 # Install pipx
-python3 -m pip install --user pipx
+python3 -m pip install --user pipx poetry
 
 # Install poetry
 pipx install poetry
