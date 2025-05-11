@@ -15,6 +15,24 @@ def read_root():
 @app.get("/catalog")
 def read_catalog():
 
+    # Construct section O - Organisation
+    si001_organisation = catalog.Group(
+        id="organisation",
+        title="Organisation",
+        controls=[
+            # TODO: Add controls here
+        ]
+    )
+
+    # Construct section P - Personal
+    si001_personal = catalog.Group(
+        id="personal",
+        title="Personal",
+        controls=[
+            # TODO: Add controls here
+        ]
+    )
+
     # Construct section T - Technik
     si001_technik = catalog.Group(
         id="technik",
@@ -282,6 +300,42 @@ def read_catalog():
         ]
     )
 
+    # Construct section I - Informationen (Daten)
+    si001_information = catalog.Group(
+        id="information",
+        title="Information",
+        controls=[
+            # TODO: Add controls here
+        ]
+    )
+
+    # Construct section S - IT-Systeme
+    si001_systeme = catalog.Group(
+        id="systeme",
+        title="IT-Systeme",
+        controls=[
+            # TODO: Add controls here
+        ]
+    )
+
+    # Construct section A - Anwendungen
+    si001_anwendungen = catalog.Group(
+        id="anwendungen",
+        title="Anwendungen",
+        controls=[
+            # TODO: Add controls here
+        ]
+    )
+
+    # Construct section Z - Zonen
+    si001_zonen = catalog.Group(
+        id="zonen",
+        title="Zonen",
+        controls=[
+            # TODO: Add controls here
+        ]
+    )
+
     # Construct si001 as a whole
     si001 = Document(
         catalog=catalog.Catalog(
@@ -293,7 +347,13 @@ def read_catalog():
                 published="2024-05-08T00:00:00.000-00:00"
             ),
             groups=[
-                si001_technik
+                si001_organisation,
+                si001_personal,
+                si001_technik,
+                si001_information,
+                si001_systeme,
+                si001_anwendungen,
+                si001_zonen
             ],
             back_matter=common.BackMatter()
         )
