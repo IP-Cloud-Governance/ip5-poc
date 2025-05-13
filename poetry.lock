@@ -48,14 +48,14 @@ files = [
 
 [[package]]
 name = "click"
-version = "8.1.8"
+version = "8.2.0"
 description = "Composable command line interface toolkit"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "click-8.1.8-py3-none-any.whl", hash = "sha256:63c132bbbed01578a06712a2d1f497bb62d9c1c0d329b7903a866228027263b2"},
-    {file = "click-8.1.8.tar.gz", hash = "sha256:ed53c9d8990d83c2a27deae68e4ee337473f6330c040a31d4225c9574d16096a"},
+    {file = "click-8.2.0-py3-none-any.whl", hash = "sha256:6b303f0b2aa85f1cb4e5303078fadcbcd4e476f114fab9b5007005711839325c"},
+    {file = "click-8.2.0.tar.gz", hash = "sha256:f5452aeddd9988eefa20f90f05ab66f17fce1ee2a36907fd30b05bbb5953814d"},
 ]
 
 [package.dependencies]
@@ -421,10 +421,8 @@ description = "A set of Pydantic models generated from the OSCAL specification."
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-files = [
-    {file = "oscal-pydantic-v2-2024.3.20.tar.gz", hash = "sha256:a32da409990e9319604391773dabcb9f18def63477504a9b215d1308f6114514"},
-    {file = "oscal_pydantic_v2-2024.3.20-py3-none-any.whl", hash = "sha256:1e6bcf2aa4dd1c4c64673dc62571afdfd540e48c96a043fec7e356c84405435f"},
-]
+files = []
+develop = false
 
 [package.dependencies]
 annotated-types = "*"
@@ -432,8 +430,14 @@ dnspython = ">=2.3"
 email-validator = ">=2"
 idna = ">=3.4"
 pydantic = ">=2"
-pydantic-core = ">=2"
-typing-extensions = "*"
+pydantic_core = ">=2"
+typing_extensions = "*"
+
+[package.source]
+type = "git"
+url = "https://github.com/IP-Cloud-Governance/oscal-pydantic.git"
+reference = "oscal-pydantic-v2"
+resolved_reference = "e4a04c31a525e611f06a9aaf72d765ee6203714e"
 
 [[package]]
 name = "pydantic"
@@ -695,14 +699,14 @@ jupyter = ["ipywidgets (>=7.5.1,<9)"]
 
 [[package]]
 name = "rich-toolkit"
-version = "0.14.5"
+version = "0.14.6"
 description = "Rich toolkit for building command-line applications"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "rich_toolkit-0.14.5-py3-none-any.whl", hash = "sha256:2fe9846ecbf5d0cdf236c7f43452b68d9da1436a81594aba6b79b3c48b05703b"},
-    {file = "rich_toolkit-0.14.5.tar.gz", hash = "sha256:1cb7a3fa0bdbf35793460708664f3f797e8b18cedec9cd41a7e6125e4bc6272b"},
+    {file = "rich_toolkit-0.14.6-py3-none-any.whl", hash = "sha256:764f3a5f9e4b539ce805596863299e8982599514906dc5e3ccc2d390ef74c301"},
+    {file = "rich_toolkit-0.14.6.tar.gz", hash = "sha256:9dbd40e83414b84e828bf899115fff8877ce5951b73175f44db142902f07645d"},
 ]
 
 [package.dependencies]
@@ -1042,4 +1046,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12"
-content-hash = "e806d4b4a77cacd48a9143b7d48c36b4752904aaf2f8484d73f5713f2ddf3391"
+content-hash = "30406d7e69f43dd9cc42e4117e78552e4d4f54480d34164deea9a4dfee7928e4"
