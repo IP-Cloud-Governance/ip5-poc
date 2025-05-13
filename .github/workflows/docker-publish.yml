@@ -40,3 +40,7 @@ jobs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+
+    - name: Trigger Azure Web App redeploy via webhook
+      run: |
+        curl -X POST "https://ip5-poc:o37b9Cvbcwwm58ojilPKyAGF67Rh2YQR3pMfW5wjPEZgHZwb0lQ2dSAS60s2@ip5-poc-f2a4adeqemfff2at.scm.westeurope-01.azurewebsites.net/api/registry/webhook"
