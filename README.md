@@ -2,6 +2,13 @@
 
 This project serves as poc environment for [ip5-documentation](https://github.com/IP-Cloud-Governance/ip5-project-documentation)
 
+
+## :rocket: Deployment
+
+The swagger-api of the app is deployed here [https://ip5-poc-f2a4adeqemfff2at.westeurope-01.azurewebsites.net/docs](https://ip5-poc-f2a4adeqemfff2at.westeurope-01.azurewebsites.net/docs).
+
+The generated document can be viewed in the [OSCAL viewer](https://viewer.oscal.io/) by copying [https://ip5-poc-f2a4adeqemfff2at.westeurope-01.azurewebsites.net/catalogs/si001.json](https://ip5-poc-f2a4adeqemfff2at.westeurope-01.azurewebsites.net/catalogs/si001.json)
+
 ## Setup
 This setup uses python3.13 stable version and poetry as package management tool
 ```bash
