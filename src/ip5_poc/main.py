@@ -5,6 +5,7 @@ import oscal_pydantic.core.common as common
 from ip5_poc.data import catalog as bv_catalog
 from typing import Dict
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import HTTPException
 
 app = FastAPI(
     title="ip5-poc OSCAL",
@@ -27,6 +28,6 @@ def read_catalog(catalog_name: str):
     if catalog_name in catalogs:
         return catalogs[catalog_name].model_dump(by_alias=True, exclude_none=True)
     else:
-        return {}
+        raise HTTPException(status_code=404, detail="Catalog not found")
     
 app.include_router(catalog_router)
