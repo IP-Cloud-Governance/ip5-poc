@@ -1,0 +1,54 @@
+{
+  "component-definition": {
+    "uuid": "12345678-abcd-efgh-ijkl-1234567890ab",
+    "metadata": {
+      "title": "Azure Kubernetes Service (AKS) Component Definition",
+      "last-modified": "2025-05-21T13:23:00.000000-00:00",
+      "version": "1.0",
+      "oscal-version": "1.1.0",
+      "parties": [
+        {
+          "uuid": "ee47836c-877c-4007-bbf3-c9d9bd805a9a",
+          "name": "Bundesamt für Informatik und Telekommunikation BIT",
+          "type": "organization"
+        }
+      ]
+    },
+    "components": [
+      {
+        "uuid": "abcdefgh-1234-ijkl-5678-mnopqrstuvwx",
+        "type": "service",
+        "title": "Azure Kubernetes Service (AKS)",
+        "description": "Managed Kubernetes service in Microsoft Azure.",
+        "responsible-roles": [
+          {
+            "role-id": "provider",
+            "party-uuids": [
+              "ee47836c-877c-4007-bbf3-c9d9bd805a9a"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "cfcdd674-8595-4f98-a9d1-3ac70825c49f",
+            "source": "https://ip5-poc-f2a4adeqemfff2at.westeurope-01.azurewebsites.net/catalogs/si001.json",
+            "description": "XXX",
+            "implemented-requirements": [
+              {
+                "uuid": "d1016df0-9b5c-4839-86cd-f9c1d113077b",
+                "control-id": "t6.1",
+                "description": "Account management for AKS cluster access."
+              },
+              {
+                "uuid": "65e30b37-0640-4844-9f42-b2a7ae944bb1",
+                "control-id": "o2.1",
+                "description": "Cryptographic key management for AKS nodes."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+
