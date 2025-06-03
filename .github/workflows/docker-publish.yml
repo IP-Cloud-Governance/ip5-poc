@@ -43,4 +43,4 @@ jobs:
 
     - name: Trigger Azure Web App redeploy via webhook
       run: |
-        curl -X POST "https://$ip5-poc-webapp:tk0Ecohctu6md745HqXsYaCQZsWcQTvy82JyCtT0EjCbB4s66aMSNRcjvALX@ip5-poc-webapp.scm.azurewebsites.net/api/registry/webhook"
+        curl -s -v -X POST "https://$ip5-poc-webapp:5l46d5s61Ken4iECh91TQ8wlnCR3cQ3G8taJNbysNkrRmPohMc764p52ZGds@ip5-poc-webapp.scm.azurewebsites.net/api/registry/webhook" -H "" -d ""
