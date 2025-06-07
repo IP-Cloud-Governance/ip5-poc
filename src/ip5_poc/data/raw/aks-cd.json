@@ -41,7 +41,7 @@
               },
               {
                 "uuid": "65e30b37-0640-4844-9f42-b2a7ae944bb1",
-                "control-id": "o2.1",
+                "control-id": "t8.1",
                 "description": "Cryptographic key management for AKS nodes."
               }
             ]
