@@ -32,7 +32,7 @@
           {
             "uuid": "cfcdd674-8595-4f98-a9d1-3ac70825c49f",
             "source": "https://ip5-poc-f2a4adeqemfff2at.westeurope-01.azurewebsites.net/catalogs/si001.json",
-            "description": "XXX",
+            "description": "Si001 - IKT-Grundschutz in der Bundesverwaltung",
             "implemented-requirements": [
               {
                 "uuid": "d1016df0-9b5c-4839-86cd-f9c1d113077b",
@@ -43,23 +43,6 @@
                 "uuid": "65e30b37-0640-4844-9f42-b2a7ae944bb1",
                 "control-id": "o2.1",
                 "description": "Cryptographic key management for AKS nodes."
-              }
-            ]
-          },
-          {
-            "uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-            "source": "https://ip5-poc-f2a4adeqemfff2at.westeurope-01.azurewebsites.net/catalogs/si002.json",
-            "description": "XXX",
-            "implemented-requirements": [
-              {
-                "uuid": "f1234567-89ab-cdef-0123-456789abcdef",
-                "control-id": "t6.2",
-                "description": "Network security for AKS clusters."
-              },
-              {
-                "uuid": "abcdef12-3456-7890-abcd-ef1234567890",
-                "control-id": "o2.2",
-                "description": "Data encryption in transit for AKS workloads."
               }
             ]
           }
