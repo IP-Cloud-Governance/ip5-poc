@@ -31,7 +31,7 @@
         "control-implementations": [
           {
             "uuid": "cfcdd674-8595-4f98-a9d1-3ac70825c49f",
-            "source": "https://ip5-poc-f2a4adeqemfff2at.westeurope-01.azurewebsites.net/catalogs/si001.json",
+            "source": "https://ip5-poc-webapp.azurewebsites.net/catalogs/si001.json",
             "description": "Si001 - IKT-Grundschutz in der Bundesverwaltung",
             "implemented-requirements": [
               {
