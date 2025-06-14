@@ -29,4 +29,8 @@ poetry update
 
 # Start fastAPI
 fastapi dev src/ip5_poc/main.py
+
+# If needed: Regenerate pydantic model based on latest json schema definition from OSCAL NIST
+# Current used one is 1.1.3 https://pages.nist.gov/OSCAL-Reference/models/v1.1.3/complete/json-outline/
+datamodel-codegen --input src/ip5_poc/data/raw/oscal_complete_schema_v1.1.3.json --input-file-type jsonschema --output src/ip5_poc/model.py --output-model-type pydantic_v2.BaseModel --allow-population-by-field-name
 ```

@@ -1,6 +1,6 @@
 {
   "component-definition": {
-    "uuid": "12345678-abcd-efgh-ijkl-1234567890ab",
+    "uuid": "e46eee83-a457-42d9-9cc4-96b00e64c638",
     "metadata": {
       "title": "Azure Kubernetes Service (AKS) Component Definition",
       "last-modified": "2025-05-21T13:23:00.000000-00:00",
@@ -16,7 +16,7 @@
     },
     "components": [
       {
-        "uuid": "abcdefgh-1234-ijkl-5678-mnopqrstuvwx",
+        "uuid": "190eb8f2-0bd0-49b1-b378-8a2f072a1419",
         "type": "service",
         "title": "Azure Kubernetes Service (AKS)",
         "description": "Managed Kubernetes service in Microsoft Azure.",
@@ -30,7 +30,7 @@
         ],
         "control-implementations": [
           {
-            "uuid": "cfcdd674-8595-4f98-a9d1-3ac70825c49f",
+            "uuid": "6c7e9b15-6d9c-4b61-a8a0-74ae51540efa",
             "source": "https://ip5-poc-webapp.azurewebsites.net/catalogs/si001.json",
             "description": "Si001 - IKT-Grundschutz in der Bundesverwaltung",
             "implemented-requirements": [
@@ -51,4 +51,3 @@
     ]
   }
 }
-

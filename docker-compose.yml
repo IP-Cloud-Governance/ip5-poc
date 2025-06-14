@@ -1,7 +1,20 @@
 version: '3.8'
 
 services:
-  app:
-    build: .
+  # app:
+  #   build: .
+  #   ports:
+  #     - "8000:8000"
+  database:
+    image: mongo:6
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      MONGO_INITDB_DATABASE: ip5poc
     ports:
-      - "8000:8000"
+      - "27017:27017"
+    volumes:
+      - db_data:/data/db
+
+volumes:
+  db_data:
