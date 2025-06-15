@@ -1,4 +1,4 @@
-from ip5_poc.model import (
+from ip5_poc.generated_oscal_model import (
     Model,
     Model3,
     OscalCompleteOscalComponentDefinitionComponentDefinition,
