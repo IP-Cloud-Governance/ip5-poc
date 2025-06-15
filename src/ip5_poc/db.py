@@ -2,7 +2,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from fastapi.encoders import jsonable_encoder
 import json
 from pathlib import Path
-from ip5_poc.generated_oscal_model import (
+from ip5_poc.models.generated_oscal_model import (
     Model,
 )
 from motor.motor_asyncio import AsyncIOMotorDatabase

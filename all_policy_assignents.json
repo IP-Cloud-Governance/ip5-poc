@@ -1,0 +1,571 @@
+[
+  {
+    "description": null,
+    "displayName": "Resource logs in Azure Kubernetes Service should be enabled",
+    "enforcementMode": "Default",
+    "id": "/subscriptions/55093e67-09be-455b-bee4-802b5ba38768/resourceGroups/ip5-scggov/providers/Microsoft.Authorization/policyAssignments/147bc63d00954d9e9d4ea6ba",
+    "identity": null,
+    "location": null,
+    "metadata": {
+      "createdBy": "ed12fe4d-59fb-431b-94c1-76d6245449b5",
+      "createdOn": "2025-06-15T12:56:32.2685231Z",
+      "parameterScopes": {},
+      "updatedBy": null,
+      "updatedOn": null
+    },
+    "name": "147bc63d00954d9e9d4ea6ba",
+    "nonComplianceMessages": [],
+    "notScopes": [],
+    "parameters": {},
+    "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/245fc9df-fa96-4414-9a0b-3738c2f7341c",
+    "resourceGroup": "ip5-scggov",
+    "scope": "/subscriptions/55093e67-09be-455b-bee4-802b5ba38768/resourceGroups/ip5-scggov",
+    "systemData": {
+      "createdAt": "2025-06-15T12:56:32.218281+00:00",
+      "createdBy": "frithjof.hoppe@students.fhnw.ch",
+      "createdByType": "User",
+      "lastModifiedAt": "2025-06-15T12:56:32.218281+00:00",
+      "lastModifiedBy": "frithjof.hoppe@students.fhnw.ch",
+      "lastModifiedByType": "User"
+    },
+    "type": "Microsoft.Authorization/policyAssignments"
+  },
+  {
+    "description": null,
+    "displayName": "FHNW Defender Initiative Production",
+    "enforcementMode": "Default",
+    "id": "/providers/Microsoft.Management/managementGroups/1009d5fe-97fc-468d-94d9-d0483cb0b532/providers/Microsoft.Authorization/policyAssignments/custDefenderInitPrd",
+    "identity": {
+      "principalId": null,
+      "tenantId": null,
+      "type": "UserAssigned",
+      "userAssignedIdentities": {
+        "/subscriptions/378670e9-7fc1-464c-ad69-22d320c5417a/resourcegroups/p-rgr-mgmtdefault/providers/Microsoft.ManagedIdentity/userAssignedIdentities/app-azs-govpolicyprod": {
+          "clientId": "991c9165-5566-4ff9-bb9a-769eb1155aae",
+          "principalId": "5401bb34-f64a-4fce-b8f2-009e144b14d2"
+        }
+      }
+    },
+    "location": "switzerlandnorth",
+    "metadata": {
+      "createdBy": "1e5cbe1d-d99f-41c8-a1f3-597374362e2d",
+      "createdOn": "2023-04-18T15:12:32.6036119Z",
+      "parameterScopes": {},
+      "updatedBy": "53b8d126-c337-43de-a909-fa380e13aab2",
+      "updatedOn": "2025-06-03T09:59:47.8081255Z"
+    },
+    "name": "custDefenderInitPrd",
+    "nonComplianceMessages": [],
+    "notScopes": [],
+    "parameters": {
+      "enable_defender_appservice_effect": {
+        "value": "Disabled"
+      },
+      "enable_defender_dns_effect": {
+        "value": "Disabled"
+      },
+      "enable_defender_server_inclusiontagname": {
+        "value": "XDR"
+      },
+      "enable_defender_server_inclusiontagvalues": {
+        "value": [
+          "On"
+        ]
+      },
+      "enable_defender_sql_paas_effect": {
+        "value": "Disabled"
+      },
+      "enable_defender_storage_effect": {
+        "value": "Disabled"
+      }
+    },
+    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/ad8bf2a8-0ac6-4a47-9bb3-286156212a7f/providers/Microsoft.Authorization/policySetDefinitions/customDefenderInitiative",
+    "scope": "/providers/Microsoft.Management/managementGroups/1009d5fe-97fc-468d-94d9-d0483cb0b532",
+    "systemData": {
+      "createdAt": "2023-04-18T15:12:32.173786+00:00",
+      "createdBy": "fulvio.ferrarini@swoncloud.com",
+      "createdByType": "User",
+      "lastModifiedAt": "2025-06-03T09:59:47.285575+00:00",
+      "lastModifiedBy": "az.jhasler@fhnw.ch",
+      "lastModifiedByType": "User"
+    },
+    "type": "Microsoft.Authorization/policyAssignments"
+  },
+  {
+    "description": null,
+    "displayName": "FHNW General Initiative Production",
+    "enforcementMode": "Default",
+    "id": "/providers/Microsoft.Management/managementGroups/1009d5fe-97fc-468d-94d9-d0483cb0b532/providers/Microsoft.Authorization/policyAssignments/custGeneralInitPrd",
+    "identity": {
+      "principalId": "37101092-5089-4937-8b48-49f685743ef6",
+      "tenantId": "9d1a5fc8-321e-4101-ae63-530730711ac2",
+      "type": "SystemAssigned",
+      "userAssignedIdentities": null
+    },
+    "location": "switzerlandnorth",
+    "metadata": {
+      "createdBy": "1e5cbe1d-d99f-41c8-a1f3-597374362e2d",
+      "createdOn": "2023-04-18T15:12:32.7453379Z",
+      "updatedBy": "53b8d126-c337-43de-a909-fa380e13aab2",
+      "updatedOn": "2024-10-22T09:09:06.3236619Z"
+    },
+    "name": "custGeneralInitPrd",
+    "nonComplianceMessages": [],
+    "notScopes": [],
+    "parameters": {
+      "allowed_locations_custom_effect": {
+        "value": "Deny"
+      },
+      "allowed_locations_custom_listOfAllowedLocations": {
+        "value": [
+          "switzerlandnorth",
+          "switzerlandwest",
+          "westeurope",
+          "northeurope",
+          "europe"
+        ]
+      },
+      "allowed_resource_types_effect": {
+        "value": "Audit"
+      },
+      "allowed_resource_types_listOfResourceTypes": {
+        "value": [
+          "microsoft.advisor/configurations",
+          "microsoft.alertsmanagement/actionrules",
+          "microsoft.alertsmanagement/smartdetectoralertrules",
+          "microsoft.automation/automationaccounts/certificates",
+          "microsoft.automation/automationaccounts/connections",
+          "microsoft.automation/automationaccounts/connectiontypes",
+          "microsoft.automation/automationaccounts/jobschedules",
+          "microsoft.automation/automationaccounts/modules",
+          "microsoft.automation/automationaccounts/runbooks",
+          "microsoft.automation/automationaccounts/schedules",
+          "icrosoft.automation/automationaccounts/variables",
+          "microsoft.automation/automationaccounts/webhooks",
+          "microsoft.authorization/classicadministrators",
+          "microsoft.authorization/locks",
+          "microsoft.authorization/roleassignments",
+          "microsoft.authorization/roledefinitions",
+          "microsoft.authorization/rolemanagementpolicies",
+          "microsoft.authorization/policyassignments",
+          "microsoft.authorization/policyexemptions",
+          "microsoft.azureactivedirectory/guestusages",
+          "microsoft.azurearcdata/sqlserverinstances",
+          "microsoft.azurearcdata/sqlserverinstances/databases",
+          "microsoft.automation/automationaccounts",
+          "microsoft.automation/automationaccounts/hybridrunbookworkergroups",
+          "microsoft.automation/automationaccounts/hybridrunbookworkergroups/hybridrunbookworkers",
+          "microsoft.automation/automationaccounts/softwareupdateconfigurations",
+          "microsoft.blueprint/blueprintassignments",
+          "microsoft.botservice/botservices",
+          "microsoft.botservice/botservices/channels",
+          "microsoft.cognitiveservices/accounts",
+          "microsoft.cognitiveservices/accounts/deployments",
+          "microsoft.compute/availabilitysets",
+          "microsoft.compute/disks",
+          "microsoft.compute/galleries",
+          "microsoft.compute/galleries/images",
+          "microsoft.compute/galleries/images/versions",
+          "microsoft.compute/images",
+          "microsoft.compute/restorepointcollections",
+          "microsoft.compute/snapshots",
+          "microsoft.compute/sshpublickeys",
+          "microsoft.compute/virtualmachines",
+          "microsoft.compute/virtualmachines/extensions",
+          "microsoft.compute/virtualmachinescalesets",
+          "microsoft.compute/virtualmachinescalesets/extensions",
+          "microsoft.compute/virtualmachinescalesets/virtualmachines",
+          "microsoft.compute/virtualmachinescalesets/virtualmachines/extensions",
+          "microsoft.connectedvmwarevsphere/vcenters",
+          "microsoft.connectedvmwarevsphere/vcenters/inventoryitems",
+          "microsoft.consumption/budgets",
+          "microsoft.containerservice/managedclusters",
+          "microsoft.containerservice/managedclusters/agentpools",
+          "microsoft.dataprotection/backupvaults",
+          "microsoft.dataprotection/backupvaults/backupinstances",
+          "microsoft.dataprotection/backupvaults/backuppolicies",
+          "microsoft.documentdb/databaseaccounts/sqldatabases",
+          "microsoft.documentdb/databaseaccounts/sqldatabases/containers",
+          "microsoft.documentdb/databaseaccounts/sqlroledefinitions",
+          "microsoft.dbformariadb/servers",
+          "microsoft.dbformariadb/servers/configurations",
+          "microsoft.dbformariadb/servers/databases",
+          "microsoft.documentdb/databaseaccounts",
+          "microsoft.documentdb/databaseaccounts/mongodbdatabases",
+          "microsoft.documentdb/databaseaccounts/mongodbdatabases/collections",
+          "microsoft.eventgrid/systemtopics",
+          "microsoft.eventgrid/systemtopics/eventsubscriptions",
+          "microsoft.extendedlocation/customlocations",
+          "microsoft.guestconfiguration/guestconfigurationassignments",
+          "microsoft.hybridcompute/machines",
+          "microsoft.hybridcompute/machines/extensions",
+          "microsoft.insights/actiongroups",
+          "microsoft.insights/activitylogalerts",
+          "microsoft.insights/components",
+          "microsoft.insights/components/proactivedetectionconfigs",
+          "microsoft.insights/datacollectionrules",
+          "microsoft.insights/scheduledqueryrules",
+          "microsoft.insights/workbooks",
+          "microsoft.keyvault/vaults",
+          "microsoft.keyvault/vaults/keys",
+          "microsoft.labservices/labaccounts",
+          "microsoft.labservices/labaccounts/galleryimages",
+          "microsoft.logic/workflows",
+          "microsoft.managedidentity/userassignedidentities",
+          "microsoft.maintenance/configurationassignments",
+          "microsoft.maintenance/maintenanceconfigurations",
+          "microsoft.network/applicationgatewaywebapplicationfirewallpolicies",
+          "microsoft.network/applicationgateways",
+          "microsoft.network/bastionhosts",
+          "microsoft.network/loadbalancers",
+          "microsoft.network/loadbalancers/backendaddresspools",
+          "microsoft.network/loadbalancers/inboundnatrules",
+          "microsoft.network/natgateways",
+          "microsoft.network/networkinterfaces",
+          "microsoft.network/networksecuritygroups",
+          "microsoft.network/networksecuritygroups/securityrules",
+          "microsoft.network/networkwatchers",
+          "microsoft.network/networkwatchers/flowlogs",
+          "microsoft.network/publicipaddresses",
+          "microsoft.network/privateendpoints",
+          "microsoft.network/privateendpoints/privatelinkserviceproxies",
+          "microsoft.network/privatednszones",
+          "microsoft.network/privatednszones/a",
+          "microsoft.network/privatednszones/soa",
+          "microsoft.network/privatednszones/virtualnetworklinks",
+          "microsoft.network/routetables",
+          "microsoft.network/routetables/routes",
+          "microsoft.network/virtualnetworks",
+          "microsoft.network/virtualnetworks/subnets",
+          "microsoft.network/virtualnetworks/taggedtrafficconsumers",
+          "microsoft.network/virtualnetworks/virtualnetworkpeerings",
+          "microsoft.operationalinsights/workspaces",
+          "microsoft.operationalinsights/workspaces/linkedservices",
+          "microsoft.operationalinsights/workspaces/tables",
+          "microsoft.operationsmanagement/solutions",
+          "microsoft.operationalinsights/querypacks",
+          "microsoft.operationalinsights/querypacks/queries",
+          "microsoft.policyinsights/remediations",
+          "microsoft.portal/dashboards",
+          "microsoft.recoveryservices/vaults",
+          "microsoft.recoveryservices/vaults/backuppolicies",
+          "microsoft.recoveryservices/vaults/replicationalertsettings",
+          "microsoft.recoveryservices/vaults/replicationvaultsettings",
+          "microsoft.resourceconnector/appliances",
+          "microsoft.resources/subscriptions/resourcegroups",
+          "microsoft.resources/subscriptions",
+          "microsoft.security/securitycontacts",
+          "microsoft.security/policies",
+          "microsoft.security/settings",
+          "microsoft.security/autoprovisioningsettings",
+          "microsoft.security/pricings",
+          "microsoft.servicebus/namespaces",
+          "microsoft.servicebus/namespaces/authorizationrules",
+          "microsoft.servicebus/namespaces/networkrulesets",
+          "microsoft.servicebus/namespaces/queues",
+          "microsoft.servicebus/namespaces/queues/authorizationrules",
+          "microsoft.storage/storageaccounts",
+          "microsoft.storage/storageaccounts/blobservices",
+          "microsoft.storage/storageaccounts/fileservices",
+          "microsoft.storage/storageaccounts/fileservices/shares",
+          "microsoft.storage/storageaccounts/privateendpointconnections",
+          "microsoft.storage/storageaccounts/queueservices",
+          "microsoft.storage/storageaccounts/queueservices/queues",
+          "microsoft.storage/storageaccounts/tableservices",
+          "microsoft.storage/storageaccounts/tableservices/tables",
+          "microsoft.web/certificates",
+          "microsoft.web/connections",
+          "microsoft.web/serverfarms",
+          "microsoft.web/sites",
+          "microsoft.web/sites/basicpublishingcredentialspolicies",
+          "microsoft.web/sites/config",
+          "microsoft.web/sites/hostnamebindings",
+          "microsoft.web/sites/virtualnetworkconnections"
+        ]
+      },
+      "deny_privatedns_deployment_custom_effect": {
+        "value": "Deny"
+      }
+    },
+    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/ad8bf2a8-0ac6-4a47-9bb3-286156212a7f/providers/Microsoft.Authorization/policySetDefinitions/customGeneralInitiative",
+    "scope": "/providers/Microsoft.Management/managementGroups/1009d5fe-97fc-468d-94d9-d0483cb0b532",
+    "systemData": {
+      "createdAt": "2023-04-18T15:12:32.399179+00:00",
+      "createdBy": "fulvio.ferrarini@swoncloud.com",
+      "createdByType": "User",
+      "lastModifiedAt": "2024-10-22T09:09:06.068074+00:00",
+      "lastModifiedBy": "az.jhasler@fhnw.ch",
+      "lastModifiedByType": "User"
+    },
+    "type": "Microsoft.Authorization/policyAssignments"
+  },
+  {
+    "description": null,
+    "displayName": "FHNW Tagging Initiative Production",
+    "enforcementMode": "Default",
+    "id": "/providers/Microsoft.Management/managementGroups/1009d5fe-97fc-468d-94d9-d0483cb0b532/providers/Microsoft.Authorization/policyAssignments/custTaggingInitPrd",
+    "identity": {
+      "principalId": null,
+      "tenantId": null,
+      "type": "UserAssigned",
+      "userAssignedIdentities": {
+        "/subscriptions/378670e9-7fc1-464c-ad69-22d320c5417a/resourcegroups/p-rgr-mgmtdefault/providers/Microsoft.ManagedIdentity/userAssignedIdentities/app-azs-govpolicyprod": {
+          "clientId": "991c9165-5566-4ff9-bb9a-769eb1155aae",
+          "principalId": "5401bb34-f64a-4fce-b8f2-009e144b14d2"
+        }
+      }
+    },
+    "location": "switzerlandnorth",
+    "metadata": {
+      "createdBy": "c5b8591e-e8ed-4c4e-9fcd-d486ccfff0b2",
+      "createdOn": "2023-05-05T08:53:20.7225963Z",
+      "parameterScopes": {},
+      "updatedBy": "53b8d126-c337-43de-a909-fa380e13aab2",
+      "updatedOn": "2025-01-07T14:13:57.2271572Z"
+    },
+    "name": "custTaggingInitPrd",
+    "nonComplianceMessages": [],
+    "notScopes": [],
+    "parameters": {
+      "inherit_tag_resource_custom_dt_effect": {
+        "value": "Disabled"
+      },
+      "inherit_tag_resourcegroup_custom_dt_effect": {
+        "value": "Disabled"
+      }
+    },
+    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/ad8bf2a8-0ac6-4a47-9bb3-286156212a7f/providers/Microsoft.Authorization/policySetDefinitions/customTaggingInitiative",
+    "scope": "/providers/Microsoft.Management/managementGroups/1009d5fe-97fc-468d-94d9-d0483cb0b532",
+    "systemData": {
+      "createdAt": "2023-05-05T08:53:20.285694+00:00",
+      "createdBy": "azadmin.ff@fhnw.ch",
+      "createdByType": "User",
+      "lastModifiedAt": "2025-01-07T14:13:56.248249+00:00",
+      "lastModifiedBy": "az.jhasler@fhnw.ch",
+      "lastModifiedByType": "User"
+    },
+    "type": "Microsoft.Authorization/policyAssignments"
+  },
+  {
+    "description": null,
+    "displayName": "FHNW Compute Initiative Production",
+    "enforcementMode": "Default",
+    "id": "/providers/Microsoft.Management/managementGroups/1009d5fe-97fc-468d-94d9-d0483cb0b532/providers/Microsoft.Authorization/policyAssignments/custComputeInitPrd",
+    "identity": {
+      "principalId": "5fd30575-2fbf-4bb4-92ce-1bc6fb8fc430",
+      "tenantId": "9d1a5fc8-321e-4101-ae63-530730711ac2",
+      "type": "SystemAssigned",
+      "userAssignedIdentities": null
+    },
+    "location": "switzerlandnorth",
+    "metadata": {
+      "createdBy": "c5b8591e-e8ed-4c4e-9fcd-d486ccfff0b2",
+      "createdOn": "2023-06-15T19:00:30.5717232Z",
+      "updatedBy": "53b8d126-c337-43de-a909-fa380e13aab2",
+      "updatedOn": "2024-10-22T09:09:07.2749062Z"
+    },
+    "name": "custComputeInitPrd",
+    "nonComplianceMessages": [],
+    "notScopes": [],
+    "parameters": {
+      "allowed_machine_sizes_custom_effect": {
+        "value": "Audit"
+      },
+      "allowed_machine_sizes_custom_listOfAllowedSKUs": {
+        "value": [
+          "Standard_B1ms",
+          "Standard_B2ms",
+          "Standard_B4ms",
+          "Standard_D2s_v3",
+          "Standard_D4s_v3",
+          "Standard_F4s",
+          "Standard_F8s",
+          "Standard_F16s",
+          "Standard_F4",
+          "Standard_F8",
+          "Standard_F16",
+          "Standard_F8s_v2",
+          "Standard_F16s_v2",
+          "Standard_F32s_v2",
+          "Standard_DS3_v2",
+          "Standard_DS4_v2",
+          "Standard_DS5_v2",
+          "Standard_D8s_v3",
+          "Standard_D16s_v3",
+          "Standard_D32s_v3"
+        ]
+      },
+      "deny_publicip_deployment_custom_effect": {
+        "value": "Deny"
+      },
+      "managed_disks_only_custom_effect": {
+        "value": "Audit"
+      }
+    },
+    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/ad8bf2a8-0ac6-4a47-9bb3-286156212a7f/providers/Microsoft.Authorization/policySetDefinitions/customComputeInitiative",
+    "scope": "/providers/Microsoft.Management/managementGroups/1009d5fe-97fc-468d-94d9-d0483cb0b532",
+    "systemData": {
+      "createdAt": "2023-06-15T19:00:30.165666+00:00",
+      "createdBy": "azadmin.ff@fhnw.ch",
+      "createdByType": "User",
+      "lastModifiedAt": "2024-10-22T09:09:06.915871+00:00",
+      "lastModifiedBy": "az.jhasler@fhnw.ch",
+      "lastModifiedByType": "User"
+    },
+    "type": "Microsoft.Authorization/policyAssignments"
+  },
+  {
+    "description": null,
+    "displayName": "FHNW Network Initiative Production",
+    "enforcementMode": "Default",
+    "id": "/providers/Microsoft.Management/managementGroups/1009d5fe-97fc-468d-94d9-d0483cb0b532/providers/Microsoft.Authorization/policyAssignments/custNetworkInitPrd",
+    "identity": {
+      "principalId": "f9e70802-9eb8-4dfa-bad3-783d268da397",
+      "tenantId": "9d1a5fc8-321e-4101-ae63-530730711ac2",
+      "type": "SystemAssigned",
+      "userAssignedIdentities": null
+    },
+    "location": "switzerlandnorth",
+    "metadata": {
+      "createdBy": "c5b8591e-e8ed-4c4e-9fcd-d486ccfff0b2",
+      "createdOn": "2023-06-15T19:21:04.3987746Z",
+      "updatedBy": "53b8d126-c337-43de-a909-fa380e13aab2",
+      "updatedOn": "2024-10-22T09:09:06.8252498Z"
+    },
+    "name": "custNetworkInitPrd",
+    "nonComplianceMessages": [],
+    "notScopes": [],
+    "parameters": {
+      "require_nsg_on_subnet_effect": {
+        "value": "AuditIfNotExists"
+      },
+      "require_nsg_on_vm_effect": {
+        "value": "AuditIfNotExists"
+      }
+    },
+    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/ad8bf2a8-0ac6-4a47-9bb3-286156212a7f/providers/Microsoft.Authorization/policySetDefinitions/customNetworkInitiative",
+    "scope": "/providers/Microsoft.Management/managementGroups/1009d5fe-97fc-468d-94d9-d0483cb0b532",
+    "systemData": {
+      "createdAt": "2023-06-15T19:21:03.968757+00:00",
+      "createdBy": "azadmin.ff@fhnw.ch",
+      "createdByType": "User",
+      "lastModifiedAt": "2024-10-22T09:09:06.345667+00:00",
+      "lastModifiedBy": "az.jhasler@fhnw.ch",
+      "lastModifiedByType": "User"
+    },
+    "type": "Microsoft.Authorization/policyAssignments"
+  },
+  {
+    "description": null,
+    "displayName": "FHNW UpdateMgmt Initiative Production",
+    "enforcementMode": "Default",
+    "id": "/providers/Microsoft.Management/managementGroups/1009d5fe-97fc-468d-94d9-d0483cb0b532/providers/Microsoft.Authorization/policyAssignments/app-azs-govpolicyprod",
+    "identity": {
+      "principalId": null,
+      "tenantId": null,
+      "type": "UserAssigned",
+      "userAssignedIdentities": {
+        "/subscriptions/378670e9-7fc1-464c-ad69-22d320c5417a/resourcegroups/p-rgr-mgmtdefault/providers/Microsoft.ManagedIdentity/userAssignedIdentities/app-azs-govpolicyprod": {
+          "clientId": "991c9165-5566-4ff9-bb9a-769eb1155aae",
+          "principalId": "5401bb34-f64a-4fce-b8f2-009e144b14d2"
+        }
+      }
+    },
+    "location": "switzerlandnorth",
+    "metadata": {
+      "createdBy": "53b8d126-c337-43de-a909-fa380e13aab2",
+      "createdOn": "2024-10-22T08:43:23.3050841Z",
+      "parameterScopes": {},
+      "updatedBy": "53b8d126-c337-43de-a909-fa380e13aab2",
+      "updatedOn": "2024-10-22T11:44:44.4818734Z"
+    },
+    "name": "app-azs-govpolicyprod",
+    "nonComplianceMessages": [],
+    "notScopes": [],
+    "parameters": {},
+    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/ad8bf2a8-0ac6-4a47-9bb3-286156212a7f/providers/Microsoft.Authorization/policySetDefinitions/customUpdmgmtInitiative",
+    "scope": "/providers/Microsoft.Management/managementGroups/1009d5fe-97fc-468d-94d9-d0483cb0b532",
+    "systemData": {
+      "createdAt": "2024-10-22T08:43:22.769281+00:00",
+      "createdBy": "az.jhasler@fhnw.ch",
+      "createdByType": "User",
+      "lastModifiedAt": "2024-10-22T11:44:44.108448+00:00",
+      "lastModifiedBy": "az.jhasler@fhnw.ch",
+      "lastModifiedByType": "User"
+    },
+    "type": "Microsoft.Authorization/policyAssignments"
+  },
+  {
+    "description": null,
+    "displayName": "Azure Security Benchmark",
+    "enforcementMode": "Default",
+    "id": "/providers/Microsoft.Management/managementGroups/ad8bf2a8-0ac6-4a47-9bb3-286156212a7f/providers/Microsoft.Authorization/policyAssignments/ce5cb3cd465246ff91a70fc0",
+    "identity": null,
+    "location": null,
+    "metadata": {
+      "assignedBy": "Fulvio Ferrarini",
+      "createdBy": "1e5cbe1d-d99f-41c8-a1f3-597374362e2d",
+      "createdOn": "2023-04-18T11:43:27.2091398Z",
+      "parameterScopes": {},
+      "updatedBy": null,
+      "updatedOn": null
+    },
+    "name": "ce5cb3cd465246ff91a70fc0",
+    "nonComplianceMessages": [],
+    "notScopes": [],
+    "parameters": {},
+    "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/1f3afdf9-d0c9-4c3d-847f-89da613e70a8",
+    "scope": "/providers/Microsoft.Management/managementGroups/ad8bf2a8-0ac6-4a47-9bb3-286156212a7f",
+    "systemData": {
+      "createdAt": "2023-04-18T11:43:26.214218+00:00",
+      "createdBy": "fulvio.ferrarini@swoncloud.com",
+      "createdByType": "User",
+      "lastModifiedAt": "2023-04-18T11:43:26.214218+00:00",
+      "lastModifiedBy": "fulvio.ferrarini@swoncloud.com",
+      "lastModifiedByType": "User"
+    },
+    "type": "Microsoft.Authorization/policyAssignments"
+  },
+  {
+    "description": null,
+    "displayName": "Configure Azure Activity logs to stream to specified Log Analytics workspace",
+    "enforcementMode": "Default",
+    "id": "/providers/Microsoft.Management/managementGroups/ad8bf2a8-0ac6-4a47-9bb3-286156212a7f/providers/Microsoft.Authorization/policyAssignments/74a1aac8489a472383c3be1f",
+    "identity": {
+      "principalId": "ce7d29a3-6e7b-4843-98b5-579820332082",
+      "tenantId": "9d1a5fc8-321e-4101-ae63-530730711ac2",
+      "type": "SystemAssigned",
+      "userAssignedIdentities": null
+    },
+    "location": "switzerlandnorth",
+    "metadata": {
+      "assignedBy": "az.msahli",
+      "createdBy": "595c15ae-24a1-4451-b3ba-c6200ba3344e",
+      "createdOn": "2025-02-18T13:01:46.5552747Z",
+      "parameterScopes": {
+        "logAnalytics": "/subscriptions/378670e9-7fc1-464c-ad69-22d320c5417a/resourcegroups/p-rgr-mgmtsecurity-01"
+      },
+      "updatedBy": null,
+      "updatedOn": null
+    },
+    "name": "74a1aac8489a472383c3be1f",
+    "nonComplianceMessages": [],
+    "notScopes": [],
+    "parameters": {
+      "logAnalytics": {
+        "value": "/subscriptions/378670e9-7fc1-464c-ad69-22d320c5417a/resourcegroups/p-rgr-mgmtsecurity-01/providers/microsoft.operationalinsights/workspaces/p-loa-securityhuntingenrichments-02"
+      }
+    },
+    "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/2465583e-4e78-4c15-b6be-a36cbc7c8b0f",
+    "scope": "/providers/Microsoft.Management/managementGroups/ad8bf2a8-0ac6-4a47-9bb3-286156212a7f",
+    "systemData": {
+      "createdAt": "2025-02-18T13:01:46.179690+00:00",
+      "createdBy": "az.msahli@fhnw.ch",
+      "createdByType": "User",
+      "lastModifiedAt": "2025-02-18T13:01:46.179690+00:00",
+      "lastModifiedBy": "az.msahli@fhnw.ch",
+      "lastModifiedByType": "User"
+    },
+    "type": "Microsoft.Authorization/policyAssignments"
+  }
+]
