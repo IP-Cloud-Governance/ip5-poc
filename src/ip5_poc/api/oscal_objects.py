@@ -1,7 +1,7 @@
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
 from ip5_poc.core.dependencies import get_az_credentials, get_db
-from ip5_poc.models.generated_oscal_model import Model, OscalCompleteOscalMetadataMetadata, OscalCompleteOscalSspSystemCharacteristics, OscalCompleteOscalSspSystemImplementation, OscalCompleteOscalSspSystemSecurityPlan
+from ip5_poc.models.generated_oscal_model import InformationType, Model, OscalCompleteOscalImplementationCommonSystemComponent, OscalCompleteOscalImplementationCommonSystemId, OscalCompleteOscalImplementationCommonSystemUser, OscalCompleteOscalMetadataLink, OscalCompleteOscalMetadataMetadata, OscalCompleteOscalSspAuthorizationBoundary, OscalCompleteOscalSspControlImplementation, OscalCompleteOscalSspImplementedRequirement, OscalCompleteOscalSspImportProfile, OscalCompleteOscalSspStatus, OscalCompleteOscalSspSystemCharacteristics, OscalCompleteOscalSspSystemImplementation, OscalCompleteOscalSspSystemInformation, OscalCompleteOscalSspSystemSecurityPlan, Status
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from azure.mgmt.resource.resources.models import GenericResourceExpanded
 from azure.mgmt.resource import ResourceManagementClient
@@ -53,6 +53,7 @@ poc_context = ProjectContext(
 async def create_ssp(context: ProjectContext = poc_context, credential: DefaultAzureCredential=Depends(get_az_credentials)):
     # Retrive here azure ressources
     # all_ressources: list[AzureCloudRessource] = _get_az_ressources(azure_paths=context.azure_paths, az_credential=credential)
+    # TODO make this part dynamic based on az ressources
 
     current_time=datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
     ssp = OscalCompleteOscalSspSystemSecurityPlan(
@@ -61,29 +62,69 @@ async def create_ssp(context: ProjectContext = poc_context, credential: DefaultA
             title=context.name,
             published=current_time,
             last_modified=current_time,
-            version="1.1.3"
+            version="0.1",
+            oscal_version="1.1.3"
         ),
         system_characteristics=OscalCompleteOscalSspSystemCharacteristics(
             system_name=context.name,
+            system_information=OscalCompleteOscalSspSystemInformation(
+                information_types=[
+                    InformationType( # retrieve this by using resource tag
+                        uuid=str(uuid.uuid4()),
+                        title="Non-sensitive data",
+                        description="Demo application doesnt hold any sensitive data"
+                    )
+                ]
+            ),
+            system_ids=[
+                OscalCompleteOscalImplementationCommonSystemId(
+                    id=str(uuid.uuid4())
+                )
+            ],
+            # retrieve this by using project context
+            description="<description>",
+            status=OscalCompleteOscalSspStatus(
+                state="under-development"
+            ), # retrieve this by using resource tag,
+            authorization_boundary=OscalCompleteOscalSspAuthorizationBoundary(
+                description="<authorization-boudary>"
+            )
+        ),
+        import_profile=OscalCompleteOscalSspImportProfile(
+            href="https://xyz.com"
         ),
         system_implementation=OscalCompleteOscalSspSystemImplementation(
-
+            users=[
+                OscalCompleteOscalImplementationCommonSystemUser(
+                    uuid=str(uuid.uuid4()),
+                    role_ids=["admin"],
+                    description="Administers the AKS"
+                )
+            ],
+            components=[
+                OscalCompleteOscalImplementationCommonSystemComponent(
+                    uuid=str(uuid.uuid4()), # Retrieve here uuid from already store compnent definition
+                    type="<type>",
+                    title="<title>",
+                    description="<description>",
+                    status=Status(
+                        state="state-of-resource"
+                    )
+                )
+            ]
+        ),
+        control_implementation=OscalCompleteOscalSspControlImplementation(
+            description="<description>",
+            implemented_requirements=[
+                OscalCompleteOscalSspImplementedRequirement(
+                    uuid=str(uuid.uuid4()),
+                    control_id="controlid"
+                )
+            ]
         )
     )
 
-    # TODO continue here mapping azure ressourcey by using 'type' to policies
-
-    
-    # General pre-condition
-    # /providers/Microsoft.Authorization/policyDefinitions/0a15ec92-a229-4763-bb14-0ea34a568f8d - azure policy add-on installed on cluster
-    # Mapping t8.1 - administrative zugriff
-    # /providers/Microsoft.Authorization/policyDefinitions/993c2fcd-2b29-49d2-9eb0-df2c3a730c32 - local authentication modes disabled only AD
-    # /providers/Microsoft.Authorization/policyDefinitions/6c66c325-74c8-42fd-a286-a74b0e2939d8 - configure diagnostics for aks
-    # Mapping z2.2 - netzwerztgriff einschränken
-    # /providers/Microsoft.Authorization/policyDefinitions/d46c275d-1680-448d-b2ec-e495a3b6cc89 - should only allowed external IPs
-    # /providers/Microsoft.Authorization/policyDefinitions/040732e8-d947-40b8-95d6-854c95024bf8 - private clusters enabled
-
-    return all_ressources
+    return ssp.model_dump(by_alias=True, exclude_none=True)
 
 
 def _get_az_ressources(azure_paths: list[str], az_credential: DefaultAzureCredential) -> list[AzureCloudRessource]:
