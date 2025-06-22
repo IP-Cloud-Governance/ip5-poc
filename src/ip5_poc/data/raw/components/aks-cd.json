@@ -23,7 +23,7 @@
         "props": [
           {
             "name":"azure-resource-type",
-            "value":"Microsoft.ContainerService/ManagedClusters"
+            "value":"Microsoft.ContainerService/managedClusters"
           }
         ],
         "responsible-roles": [
