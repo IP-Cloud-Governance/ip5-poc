@@ -27,6 +27,9 @@ pipx install poetry
 # Install project dependencies
 poetry update
 
+# Login to az cli, so that the az sdk can access azure in the background with personal user context
+az login
+
 # Start fastAPI
 fastapi dev src/ip5_poc/main.py
 
