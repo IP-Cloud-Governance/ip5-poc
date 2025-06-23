@@ -1,8 +1,8 @@
-from typing import List
+from typing import Any, List
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
 from ip5_poc.core.dependencies import get_az_credentials, get_db
-from ip5_poc.models.generated_oscal_model import InformationType, Model, OscalCompleteOscalImplementationCommonSystemComponent, OscalCompleteOscalImplementationCommonSystemId, OscalCompleteOscalImplementationCommonSystemUser, OscalCompleteOscalMetadataLink, OscalCompleteOscalMetadataMetadata, OscalCompleteOscalMetadataProperty, OscalCompleteOscalSspAuthorizationBoundary, OscalCompleteOscalSspControlImplementation, OscalCompleteOscalSspImplementedRequirement, OscalCompleteOscalSspImportProfile, OscalCompleteOscalSspStatus, OscalCompleteOscalSspSystemCharacteristics, OscalCompleteOscalSspSystemImplementation, OscalCompleteOscalSspSystemInformation, OscalCompleteOscalSspSystemSecurityPlan, Status
+from ip5_poc.models.generated_oscal_model import InformationType, Model, Model3, Model4, OscalCompleteOscalImplementationCommonSystemComponent, OscalCompleteOscalImplementationCommonSystemId, OscalCompleteOscalImplementationCommonSystemUser, OscalCompleteOscalMetadataLink, OscalCompleteOscalMetadataMetadata, OscalCompleteOscalMetadataProperty, OscalCompleteOscalSspAuthorizationBoundary, OscalCompleteOscalSspByComponent, OscalCompleteOscalSspControlImplementation, OscalCompleteOscalSspImplementedRequirement, OscalCompleteOscalSspImportProfile, OscalCompleteOscalSspStatus, OscalCompleteOscalSspSystemCharacteristics, OscalCompleteOscalSspSystemImplementation, OscalCompleteOscalSspSystemInformation, OscalCompleteOscalSspSystemSecurityPlan, Status
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from azure.mgmt.resource.resources.models import GenericResourceExpanded
 from azure.mgmt.resource import ResourceManagementClient
@@ -55,10 +55,13 @@ async def create_ssp(context: ProjectContext = poc_context, credential: DefaultA
     # Get azure resources based on project context
     all_ressources: list[AzureCloudRessource] = _get_az_ressources(azure_paths=context.azure_paths, az_credential=credential)
     identified_components: List[OscalCompleteOscalImplementationCommonSystemComponent] = []
+    implemented_requirements: List[OscalCompleteOscalSspImplementedRequirement] = []
+
+    print(">> Analyzing azure ressources")
 
     for resource in all_ressources:
         print(f">> {resource.ressource.type}")
-        components_definitions = await db["component-definitions"].find(
+        components_definitions: list[Any] = await db["component-definitions"].find(
             {"component-definition.components.props.value": resource.ressource.type},
             {"_id": 0}
         ).to_list()
@@ -66,10 +69,8 @@ async def create_ssp(context: ProjectContext = poc_context, credential: DefaultA
             current_comp = OscalCompleteOscalImplementationCommonSystemComponent(
                 uuid=str(uuid.uuid4()), # Retrieve here uuid from already store compnent definition
                 type="service",
-                # title=resource.ressource.name,
-                title="title",
-                # description=resource.ressource.name,
-                description="descdription",
+                title=resource.ressource.name,
+                description=resource.ressource.name,
                 status=Status(
                     state="state-of-resource"
                 ),
@@ -77,15 +78,76 @@ async def create_ssp(context: ProjectContext = poc_context, credential: DefaultA
                     OscalCompleteOscalMetadataProperty(
                         name="azure-region",
                         value=resource.ressource.location
+                    ),
+                    OscalCompleteOscalMetadataProperty(
+                        name="azure-resource-type",
+                        value=resource.ressource.type
+                    ),
+                    OscalCompleteOscalMetadataProperty(
+                        name="azure-resource-id",
+                        value=resource.ressource.id
                     )
                 ]
             )
             identified_components.append(current_comp)
-        # else:
-            # TODO add existing component defnition to array and create referenc e.g. in prop field 
-            # print(components_definitions)
-            # current_comp = Model.model_validate(components_definitions[0])
-            # identified_components.append(current_comp)
+        else:
+            # TODO make this more generic
+            wrapper = Model3.model_validate(components_definitions[0]).component_definition
+            predef_component = next((comp for comp in wrapper.components if (prop for prop in comp.props if prop.value == resource.ressource.type)),None)
+
+            # Define actual component
+            current_comp = OscalCompleteOscalImplementationCommonSystemComponent(
+                uuid=str(uuid.uuid4()),
+                type="service",
+                title=predef_component.title,
+                description=predef_component.description,
+                status=Status(
+                    state="state-of-resource"
+                ),
+                props=[
+                    OscalCompleteOscalMetadataProperty(
+                        name="azure-region",
+                        value=resource.ressource.location
+                    ),
+                    OscalCompleteOscalMetadataProperty(
+                        name="azure-resource-type",
+                        value=resource.ressource.type
+                    ),
+                    OscalCompleteOscalMetadataProperty(
+                        name="azure-resource-id",
+                        value=resource.ressource.id
+                    ),
+                    OscalCompleteOscalMetadataProperty(
+                        name="oscal-derived-component-definition-uuid",
+                        value=str(wrapper.uuid)
+                    ),
+                    OscalCompleteOscalMetadataProperty(
+                        name="oscal-derived-component-uuid",
+                        value=str(predef_component.uuid)
+                    )
+                ]
+            )
+            identified_components.append(current_comp)
+
+            # Define implementation of actual component
+            # TODO make this more generic
+            implementation = predef_component.control_implementations[0]
+            
+            for req in implementation.implemented_requirements:
+                implemented_req = OscalCompleteOscalSspImplementedRequirement(
+                        uuid=str(uuid.uuid4()),
+                        control_id=req.control_id,
+                        props=req.props,
+                        by_components=[
+                            OscalCompleteOscalSspByComponent(
+                                component_uuid=current_comp.uuid,
+                                uuid=str(uuid.uuid4()),
+                                description=f"{req.control_id} is implemented by {resource.ressource.id}"
+                            )
+                        ]
+                )
+                implemented_requirements.append(implemented_req)
+
 
     current_time=datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
     ssp = OscalCompleteOscalSspSystemSecurityPlan(
@@ -137,17 +199,17 @@ async def create_ssp(context: ProjectContext = poc_context, credential: DefaultA
         ),
         # TODO make this part dynamic
         control_implementation=OscalCompleteOscalSspControlImplementation(
-            description="<description>",
-            implemented_requirements=[
+            description=f"Controls implemented by project {context.name}",
+            implemented_requirements=implemented_requirements if implemented_requirements else [
                 OscalCompleteOscalSspImplementedRequirement(
                     uuid=str(uuid.uuid4()),
-                    control_id="controlid"
+                    control_id="default"
                 )
             ]
         )
     )
 
-    return ssp.model_dump(by_alias=True, exclude_none=True)
+    return Model4(system_security_plan=ssp).model_dump(by_alias=True, exclude_none=True)
 
 
 def _get_az_ressources(azure_paths: list[str], az_credential: DefaultAzureCredential) -> list[AzureCloudRessource]:

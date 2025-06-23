@@ -1,480 +1,325 @@
 {
   "system-security-plan": {
-    "uuid": "5e139edd-86aa-4b65-8431-1192bd276658",
+    "uuid": "78dced03-dc8b-48f9-8a1a-69944e257762",
     "metadata": {
-      "title": "IFA GoodRead System Security Plan",
-      "published": "2023-05-19T14:46:54-04:00",
-      "last-modified": "2024-03-01T13:57:28.355446-04:00",
-      "version": "1.1",
-      "oscal-version": "1.1.2",
-      "roles": [
-        {
-          "id": "owner",
-          "title": "IFA GoodRead Owner"
-        },
-        {
-          "id": "developer",
-          "title": "IFA GoodRead Developer"
-        },
-        {
-          "id": "system-engineer",
-          "title": "IFA GoodRead System Engineer"
-        },
-        {
-          "id": "public-affairs-office",
-          "title": "IFA Public Affairs Office"
-        }
-      ],
-      "parties": [
-        {
-          "uuid": "ba9c12bd-e5ef-46b6-95a2-4d8e7f864c1a",
-          "type": "person",
-          "name": "Owen Stilskin",
-          "member-of-organizations": [
-            "3a675986-b4ff-4030-b178-e953c2e55d64"
-          ]
-        },
-        {
-          "uuid": "67c04291-dbf6-495a-a3ba-0011638acc94",
-          "type": "person",
-          "name": "Juno Styles",
-          "member-of-organizations": [
-            "3a675986-b4ff-4030-b178-e953c2e55d64"
-          ]
-        },
-        {
-          "uuid": "4ba3f2b7-e894-48d7-b940-91c68661df55",
-          "type": "person",
-          "name": "Xavier Jones",
-          "member-of-organizations": [
-            "3a675986-b4ff-4030-b178-e953c2e55d64"
-          ]
-        },
-        {
-          "uuid": "3a675986-b4ff-4030-b178-e953c2e55d64",
-          "type": "organization",
-          "name": "Important Federal Agency",
-          "short-name": "IFA",
-          "links": [
-            {
-              "href": "https://www.ifa.gov",
-              "rel": "website"
-            }
-          ]
-        }
-      ],
-      "responsible-parties": [
-        {
-          "role-id": "owner",
-          "party-uuids": [
-            "ba9c12bd-e5ef-46b6-95a2-4d8e7f864c1a"
-          ]
-        },
-        {
-          "role-id": "developer",
-          "party-uuids": [
-            "67c04291-dbf6-495a-a3ba-0011638acc94"
-          ]
-        },
-        {
-          "role-id": "system-engineer",
-          "party-uuids": [
-            "4ba3f2b7-e894-48d7-b940-91c68661df55"
-          ]
-        }
-      ]
+      "title": "poc-resource",
+      "published": "2025-06-23T18:06:39+02:00",
+      "last-modified": "2025-06-23T18:06:39+02:00",
+      "version": "0.1",
+      "oscal-version": "1.1.3"
     },
     "import-profile": {
-      "href": "../select/profile.oscal.json"
+      "href": "https://xyz.com"
     },
     "system-characteristics": {
       "system-ids": [
         {
-          "identifier-type": "http://ietf.org/rfc/rfc4122",
-          "id": "8101e04d-8305-4e73-bb95-6b59f645b143"
+          "id": "a735ac84-964c-4a07-92be-b984340bdd23"
         }
       ],
-      "system-name": "IFA GoodRead",
-      "description": "This system acts as a link shortener for IFA employees",
-      "date-authorized": "2023-05-19",
-      "security-sensitivity-level": "moderate",
+      "system-name": "poc-resource",
+      "description": "<description>",
       "system-information": {
         "information-types": [
           {
-            "uuid": "bccfbb65-a7f3-41ac-989f-01d96eddfdc7",
-            "title": "User-provided Links",
-            "description": "This system maintains a set of user-provided links and their associated shortlinks",
-            "categorizations": [
-              {
-                "system": "https://doi.org/10.6028/NIST.SP.800-60v2r1",
-                "information-type-ids": [
-                  "C.2.8.12"
-                ]
-              }
-            ],
-            "confidentiality-impact": {
-              "base": "fips-199-low"
-            },
-            "integrity-impact": {
-              "base": "fips-199-low",
-              "selected": "fips-199-moderate",
-              "adjustment-justification": "Maliciously modified links are a concern"
-            },
-            "availability-impact": {
-              "base": "fips-199-low"
-            }
+            "uuid": "ac4eb368-6ba5-4177-8d6c-ce7c4c5b7a1d",
+            "title": "Non-sensitive data",
+            "description": "Demo application doesnt hold any sensitive data"
           }
         ]
       },
-      "security-impact-level": {
-        "security-objective-confidentiality": "low",
-        "security-objective-integrity": "medium",
-        "security-objective-availability": "low"
-      },
       "status": {
-        "state": "operational"
+        "state": "under-development"
       },
       "authorization-boundary": {
-        "description": "This section describes an attached diagram of the authorization boundary for IFA GoodRead Project's information system."
-      },
-      "network-architecture": {
-        "description": "This section describes an attached diagram of the network architecture for IFA GoodRead Project's information system."
-      },
-      "data-flow": {
-        "description": "This section describes an attached diagram of various dataflows for application and related elements of the IFA GoodRead Project's information system."
+        "description": "<authorization-boudary>"
       }
     },
     "system-implementation": {
       "users": [
         {
-          "uuid": "00d323d3-dc3f-4d93-900f-f13430e094d3",
-          "title": "Application Administrator",
-          "description": "The developer of the application supports IFA Public Affairs Officers by administering the application and its infrastructure.",
+          "uuid": "c5fe5296-a4c8-46db-ab25-5f548e10e1cd",
+          "description": "Administers the AKS",
           "role-ids": [
-            "developer"
-          ],
-          "authorized-privileges": [
-            {
-              "title": "Application Administrator Privilege",
-              "functions-performed": [
-                "user-creation",
-                "user-enablement",
-                "user-disablement",
-                "user-role-modification",
-                "popular-shortlink-cache-reset",
-                "database-export",
-                "database-migration"
-              ]
-            }
-          ]
-        },
-        {
-          "uuid": "61405ba7-edb4-4243-8461-79aac5805e5c",
-          "title": "Public Affairs Officers",
-          "description": "IFA Public Affairs Officers (PAOs) in each division of the agency review public communications to citizens who are customers of the IFA. PAOs review requests from colleagues to generate and publish content that is the target of a shortlink and can unpublish shortlinks.",
-          "role-ids": [
-            "public-affairs-office"
-          ],
-          "authorized-privileges": [
-            {
-              "title": "Public Affairs Officer Privilege",
-              "functions-performed": [
-                "shortlink-generation",
-                "shortlink-approval",
-                "shortlink-rejection",
-                "shortlink-publication",
-                "shortlink-unpublication"
-              ]
-            }
-          ]
-        },
-        {
-          "uuid": "fb36760a-143d-490b-8fc4-6a8c172fba86",
-          "title": "General Public",
-          "description": "The general public is free to click on shortlinks",
-          "authorized-privileges": [
-            {
-              "title": "General Public Privilege",
-              "functions-performed": [
-                "shortlink-view"
-              ]
-            }
+            "admin"
           ]
         }
       ],
       "components": [
         {
-          "uuid": "551b9706-d6a4-4d25-8207-f2ccec548b89",
-          "type": "this-system",
-          "title": "IFA GoodRead System",
-          "description": "IFA develops, operates, and maintains the GoodRead link shortener system to ",
+          "uuid": "48b61b8e-c8f6-4c8f-bf62-193694177215",
+          "type": "service",
+          "title": "aks-default-26577910-vmss",
+          "description": "description",
+          "props": [
+            {
+              "name": "azure-region",
+              "value": "northeurope"
+            },
+            {
+              "name": "azure-resource-type",
+              "value": "Microsoft.Compute/virtualMachineScaleSets"
+            }
+          ],
           "status": {
-            "state": "operational"
-          },
-          "responsible-roles": [
-            {
-              "role-id": "developer",
-              "party-uuids": [
-                "67c04291-dbf6-495a-a3ba-0011638acc94"
-              ]
-            },
-            {
-              "role-id": "system-engineer",
-              "party-uuids": [
-                "4ba3f2b7-e894-48d7-b940-91c68661df55"
-              ]
-            }
-          ]
-        }
-      ],
-      "inventory-items": [
-        {
-          "uuid": "4392599a-9117-416a-87d1-24c7d1b2dd0b",
-          "description": "This is the custom GoodRead application within the system.",
-          "props": [
-            {
-              "name": "software-name",
-              "value": "IFA GoodRead",
-              "class": "webserver-application"
-            },
-            {
-              "name": "software-version",
-              "value": "1.0.0",
-              "class": "webserver-application"
-            },
-            {
-              "name": "asset-type",
-              "value": "web-server",
-              "class": "webserver-application"
-            }
-          ],
-          "implemented-components": [
-            {
-              "component-uuid": "551b9706-d6a4-4d25-8207-f2ccec548b89",
-              "props": [
-                {
-                  "name": "asset-id",
-                  "value": "IFAGOV-SYSTEM1234-GOODREAD"
-                }
-              ]
-            }
-          ]
+            "state": "state-of-resource"
+          }
         },
         {
-          "uuid": "d911b560-f564-4715-8d2a-76f86127ac73",
-          "description": "This is the web application framework upon which the developer writes the custom GoodRead application for the user interface and API of this system.",
+          "uuid": "f4ee5f01-dc5b-44c7-a4ed-9536c2ce64e0",
+          "type": "service",
+          "title": "azurepolicy-sgc-cloudcompliance",
+          "description": "description",
           "props": [
             {
-              "name": "software-name",
-              "value": "Django Framework",
-              "class": "webserver-framework"
+              "name": "azure-region",
+              "value": "northeurope"
             },
             {
-              "name": "software-version",
-              "value": "4.2.1",
-              "class": "webserver-framework"
-            },
-            {
-              "name": "asset-type",
-              "value": "web-server",
-              "class": "webserver-framework"
+              "name": "azure-resource-type",
+              "value": "Microsoft.ManagedIdentity/userAssignedIdentities"
             }
           ],
-          "implemented-components": [
-            {
-              "component-uuid": "551b9706-d6a4-4d25-8207-f2ccec548b89",
-              "props": [
-                {
-                  "name": "asset-id",
-                  "value": "IFAGOV-SYSTEM1234-GOODREAD"
-                }
-              ]
-            }
-          ]
+          "status": {
+            "state": "state-of-resource"
+          }
         },
         {
-          "uuid": "3e3a8d9a-e3d6-4c7d-b59b-a8d6514fa4a2",
-          "description": "This is the database for the custom GoodRead application within the system.",
+          "uuid": "fd5f0450-c2ab-47cb-898b-1335a05e2893",
+          "type": "service",
+          "title": "sgc-cloudcompliance-agentpool",
+          "description": "description",
           "props": [
             {
-              "name": "software-name",
-              "value": "PostgreSQL",
-              "class": "database"
+              "name": "azure-region",
+              "value": "northeurope"
             },
             {
-              "name": "software-version",
-              "value": "15.3",
-              "class": "database"
-            },
-            {
-              "name": "asset-type",
-              "value": "database",
-              "class": "database"
+              "name": "azure-resource-type",
+              "value": "Microsoft.ManagedIdentity/userAssignedIdentities"
             }
           ],
-          "implemented-components": [
-            {
-              "component-uuid": "551b9706-d6a4-4d25-8207-f2ccec548b89",
-              "props": [
-                {
-                  "name": "asset-id",
-                  "value": "IFAGOV-SYSTEM1234-GOODREAD"
-                }
-              ]
-            }
-          ]
+          "status": {
+            "state": "state-of-resource"
+          }
         },
         {
-          "uuid": "0fb95c4c-ebfd-492e-8145-363eb7947dbe",
-          "description": "This is the operating system for the web server that runs the custom GoodRead application within the system.",
+          "uuid": "cebee3eb-047d-44e5-9a60-d71518d87016",
+          "type": "service",
+          "title": "kubernetes",
+          "description": "description",
           "props": [
             {
-              "name": "software-name",
-              "value": "Red Hat Enterprise Linux 9",
-              "class": "operating-system"
+              "name": "azure-region",
+              "value": "northeurope"
             },
             {
-              "name": "asset-type",
-              "value": "operating-system",
-              "class": "operating-system"
+              "name": "azure-resource-type",
+              "value": "Microsoft.Network/loadBalancers"
             }
           ],
-          "implemented-components": [
-            {
-              "component-uuid": "551b9706-d6a4-4d25-8207-f2ccec548b89",
-              "props": [
-                {
-                  "name": "asset-id",
-                  "value": "IFAGOV-SYSTEM1234-GOODREAD"
-                }
-              ]
-            }
-          ]
+          "status": {
+            "state": "state-of-resource"
+          }
         },
         {
-          "uuid": "cd39f700-23ab-4574-a17e-c9c8f073cbec",
-          "description": "This inventory item is an instance from the AwesomeCloud Awesome Compute Service (ACS) Service. It is a Linux server.",
+          "uuid": "0d071283-65f5-4e2c-ad34-8f8480072256",
+          "type": "service",
+          "title": "aks-agentpool-29794200-nsg",
+          "description": "description",
           "props": [
             {
-              "name": "asset-id",
-              "value": "instance-abcd1234",
-              "class": "linux-server"
+              "name": "azure-region",
+              "value": "northeurope"
             },
             {
-              "name": "ipv4-address",
-              "value": "172.1.2.3",
-              "class": "linux-server"
-            },
-            {
-              "name": "ipv4-address",
-              "value": "1.1.2.3",
-              "class": "linux-server"
-            },
-            {
-              "name": "uri",
-              "value": "instance-abcd1234.acs.awesomecloud.systems",
-              "class": "linux-server"
-            },
-            {
-              "name": "asset-type",
-              "value": "appliance",
-              "class": "linux-server"
+              "name": "azure-resource-type",
+              "value": "Microsoft.Network/networkSecurityGroups"
             }
           ],
-          "implemented-components": [
-            {
-              "component-uuid": "551b9706-d6a4-4d25-8207-f2ccec548b89",
-              "props": [
-                {
-                  "name": "asset-id",
-                  "value": "IFAGOV-SYSTEM1234-GOODREAD"
-                }
-              ]
-            }
-          ]
+          "status": {
+            "state": "state-of-resource"
+          }
         },
         {
-          "uuid": "d9550535-40b9-4d8b-861c-07aa8786bf43",
-          "description": "This inventory item is an instance from the AwesomeCloud Awesome Load Balancer (ALB) Service. It is a Linux server.",
+          "uuid": "bc5374c5-137d-4aff-8cfc-83d3261332c0",
+          "type": "service",
+          "title": "6599bd60-5d48-4366-9bac-6b1d66afdeb0",
+          "description": "description",
           "props": [
             {
-              "name": "asset-type",
-              "value": "appliance",
-              "class": "network-load-balancer"
+              "name": "azure-region",
+              "value": "northeurope"
             },
             {
-              "name": "asset-id",
-              "value": "instance-defg7890",
-              "class": "linux-server"
-            },
-            {
-              "name": "uri",
-              "value": "https://instance-defg7890.alb.awesomecloud.systems",
-              "class": "network-load-balancer"
+              "name": "azure-resource-type",
+              "value": "Microsoft.Network/publicIPAddresses"
             }
           ],
-          "implemented-components": [
+          "status": {
+            "state": "state-of-resource"
+          }
+        },
+        {
+          "uuid": "cfaee7e8-a8d7-422c-a093-504a33da5f1e",
+          "type": "service",
+          "title": "aks-vnet-29794200",
+          "description": "description",
+          "props": [
             {
-              "component-uuid": "551b9706-d6a4-4d25-8207-f2ccec548b89",
-              "props": [
-                {
-                  "name": "asset-id",
-                  "value": "IFAGOV-SYSTEM1234-GOODREAD"
-                }
-              ]
+              "name": "azure-region",
+              "value": "northeurope"
+            },
+            {
+              "name": "azure-resource-type",
+              "value": "Microsoft.Network/virtualNetworks"
             }
-          ]
+          ],
+          "status": {
+            "state": "state-of-resource"
+          }
+        },
+        {
+          "uuid": "9d90d86a-6303-4c26-9d90-018b6a35ebce",
+          "type": "service",
+          "title": "NetworkWatcher_northeurope",
+          "description": "description",
+          "props": [
+            {
+              "name": "azure-region",
+              "value": "northeurope"
+            },
+            {
+              "name": "azure-resource-type",
+              "value": "Microsoft.Network/networkWatchers"
+            }
+          ],
+          "status": {
+            "state": "state-of-resource"
+          }
+        },
+        {
+          "uuid": "d16d2c40-0903-4d45-8af3-d94eb86df0e3",
+          "type": "service",
+          "title": "gptscript-oai",
+          "description": "description",
+          "props": [
+            {
+              "name": "azure-region",
+              "value": "switzerlandnorth"
+            },
+            {
+              "name": "azure-resource-type",
+              "value": "Microsoft.CognitiveServices/accounts"
+            }
+          ],
+          "status": {
+            "state": "state-of-resource"
+          }
+        },
+        {
+          "uuid": "3e4b95cf-1f1f-4eb2-ba16-8c1f5c43f04f",
+          "type": "service",
+          "title": "imvs-aks-manager",
+          "description": "description",
+          "props": [
+            {
+              "name": "azure-region",
+              "value": "northeurope"
+            },
+            {
+              "name": "azure-resource-type",
+              "value": "Microsoft.Automation/automationAccounts"
+            }
+          ],
+          "status": {
+            "state": "state-of-resource"
+          }
+        },
+        {
+          "uuid": "2d71fb91-b07d-4960-b4a1-9e1e1569263e",
+          "type": "service",
+          "title": "imvs-aks-manager/stop-aks-cluster",
+          "description": "description",
+          "props": [
+            {
+              "name": "azure-region",
+              "value": "northeurope"
+            },
+            {
+              "name": "azure-resource-type",
+              "value": "Microsoft.Automation/automationAccounts/runbooks"
+            }
+          ],
+          "status": {
+            "state": "state-of-resource"
+          }
+        },
+        {
+          "uuid": "575a5bc2-0de8-49a3-842c-6fe277de7cfc",
+          "type": "service",
+          "title": "sgc-cloudcompliance",
+          "description": "description",
+          "props": [
+            {
+              "name": "azure-region",
+              "value": "northeurope"
+            },
+            {
+              "name": "azure-resource-type",
+              "value": "Microsoft.ContainerService/managedClusters"
+            }
+          ],
+          "status": {
+            "state": "state-of-resource"
+          }
+        },
+        {
+          "uuid": "28ff7258-1b5b-41bf-be1f-ebaac30a7514",
+          "type": "service",
+          "title": "ip5-poc-plan",
+          "description": "description",
+          "props": [
+            {
+              "name": "azure-region",
+              "value": "northeurope"
+            },
+            {
+              "name": "azure-resource-type",
+              "value": "Microsoft.Web/serverFarms"
+            }
+          ],
+          "status": {
+            "state": "state-of-resource"
+          }
+        },
+        {
+          "uuid": "8116b51c-418a-4259-a101-1f5fe1c52cf9",
+          "type": "service",
+          "title": "ip5-poc-webapp",
+          "description": "description",
+          "props": [
+            {
+              "name": "azure-region",
+              "value": "northeurope"
+            },
+            {
+              "name": "azure-resource-type",
+              "value": "Microsoft.Web/sites"
+            }
+          ],
+          "status": {
+            "state": "state-of-resource"
+          }
         }
       ]
     },
     "control-implementation": {
-      "description": "This is the control implementation for the application and infrastructure that compose to the IFA GoodRead Project's system.",
-      "set-parameters": [
-        {
-          "param-id": "ac-06.01_odp.01",
-          "values": [
-            "individuals and roles with authorized access to security functions and security-relevant information are defined and not available to all users of the system;"
-          ]
-        },
-        {
-          "param-id": "ac-06.01_odp.02",
-          "values": [
-            "security functions (deployed in hardware) for authorized access are defined;"
-          ]
-        },
-        {
-          "param-id": "ac-06.01_odp.03",
-          "values": [
-            "security functions (deployed in soware) for authorized access are defined;"
-          ]
-        },
-        {
-          "param-id": "ac-06.01_odp.04",
-          "values": [
-            "security functions (deployed in firmware) for authorized access are defined;"
-          ]
-        },
-        {
-          "param-id": "ac-06.01_odp.05",
-          "values": [
-            "security-relevant information for authorized access is defined;"
-          ]
-        }
-      ],
+      "description": "<description>",
       "implemented-requirements": [
         {
-          "uuid": "d5f9b263-965d-440b-99e7-77f5df670a11",
-          "control-id": "ac-6.1",
-          "by-components": [
-            {
-              "component-uuid": "551b9706-d6a4-4d25-8207-f2ccec548b89",
-              "uuid": "a4c2d318-26a9-49df-9818-ee0acaf066f2",
-              "description": "The IFA GoodRead application and infrastructure are composed as designed and implemented with lease privilege for the elements of this system.\n\nFor the IFA GoodRead application, the custom application is designed and implemented on top of the Django Framework to enforce least privilege. The application has a role for IFA Public Affairs Officers and one for the developers for privileged permissions, respectively. Only the latter can access or change administrative and security configurations and related data.\n\nThe Django Framework and Django REST Framework (DRF), by default, allows any user with the `is_staff` role attribute to access administrative functions in an application using the framework. IFA GoodRead developers have disabled this behavior, relying on the custom roles identified in the relevant section.\n\nFor the IFA GoodRead database, the system account and accredentials for the application to read and write to the system datastore has specific read and write authorization for specific tables. This database service account does not have full administrative permissions to add, modify, or delete all respective tables. For the production environment, only the IFA GoodRead developer has a dedicated account with equivalent permissions. Only local network socket access, within in the Linux server, is permitted by host firewall configuration. Remote access, privileged or unprivileged, is not allowed remotely and the system engineer must locally authenticate for access.\n\nFor the RedHat Linux server upon which the IFA GoodRead application is deployed in this system, only the system engineer has a non-privileged user to log in remotely via the SSH protocol to perform ad-hoc inspection, monthly log review as required by policy and procedure, and emergency debugging of the system. Privileged system administration operations may only be performed with the `sudo` subsystem which requires a password, two-factor authentication, and has enhanced logging of all commands executed. The system engineer must log in remotely and then use `sudo` to elevate privileges. Remote access with the privileged account is prohibited by configuration and attempts are logged.\n\nFor this remote SSH access, least privilege is additionally enforced by allowing this access via a specific network zone in the IFA GoodRead AwesomeCloud account accessible to only the system engineer via IFA's VPN solution, which requires the system engineer use a dedicated account with their own password and two-factor authentication token.\n\nFor cloud account and API access to reconfigure the Linux server and its load balancer, administrative access is only allowed for the system engineer via a special AwesomeCloud IAM role. The authentication and authorization for this role is controlled by an integration with the organization's single sign-on solution. This solution will only be accessible and correctly execute for them when they are on the VPN with their account with traffic forwarded to the appropriate network zone in the IFA GoodRead account in AwesomeCloud. It will not work the developer or any staff users of the application.",
-              "implementation-status": {
-                "state": "implemented"
-              }
-            }
-          ]
+          "uuid": "c13b985b-fe5a-45f9-9f7e-12819398a30d",
+          "control-id": "controlid"
         }
       ]
     }
