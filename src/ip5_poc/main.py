@@ -8,6 +8,15 @@ from ip5_poc.api.oscal_objects import (
     ssp_router
     )
 from ip5_poc.api.triggers import trigger_router
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+
+logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -20,7 +29,8 @@ async def lifespan(app: FastAPI):
 
     # Clean up
     mongo_client.close()
-    print("MongoDB connection closed")
+    logger.info("MongoDB connection closed")
+
 
 # General setup of fast api
 app = FastAPI(title="ip5-poc OSCAL", lifespan=lifespan)

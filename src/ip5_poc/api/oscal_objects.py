@@ -11,6 +11,10 @@ from ip5_poc.models.model import AzureCloudRessource, ProjectContext
 import re
 from datetime import datetime, timezone
 import uuid
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 component_definition_router = APIRouter(
     prefix="/component-definitions", tags=["OSCAL"]
@@ -57,10 +61,10 @@ async def create_ssp(context: ProjectContext = poc_context, credential: DefaultA
     identified_components: List[OscalCompleteOscalImplementationCommonSystemComponent] = []
     implemented_requirements: List[OscalCompleteOscalSspImplementedRequirement] = []
 
-    print(">> Analyzing azure ressources")
+    logger.info("Anaylzing azure resources")
 
     for resource in all_ressources:
-        print(f">> {resource.ressource.type}")
+        logger.info(f"{resource.ressource.type}")
         components_definitions: list[Any] = await db["component-definitions"].find(
             {"component-definition.components.props.value": resource.ressource.type},
             {"_id": 0}
@@ -226,7 +230,7 @@ def _get_az_ressources(azure_paths: list[str], az_credential: DefaultAzureCreden
     for path in azure_paths:
         subscription_match = re.fullmatch(subscription_pattern, path)
         rg_match = re.fullmatch(rg_pattern, path)
-        print(f"search in azure for {path}")
+        logger.info(f"search in azure for {path}")
         if subscription_match:
             # Retrieve ressources of subscription
             subscription_id = subscription_match.group("subscription_id")
