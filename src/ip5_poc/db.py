@@ -11,11 +11,13 @@ import logging
 MONGO_URL = "mongodb://user:secret@localhost:27017/"
 DB_NAME = "mydatabase"
 
+
 def connect() -> AsyncIOMotorClient:
     return AsyncIOMotorClient(MONGO_URL)
 
 
 logger = logging.getLogger(__name__)
+
 
 async def load_json_into_db(db: AsyncIOMotorDatabase):
     """

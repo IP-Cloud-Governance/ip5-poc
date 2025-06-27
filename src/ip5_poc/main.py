@@ -5,8 +5,8 @@ from ip5_poc.db import connect, load_json_into_db
 from ip5_poc.api.oscal_objects import (
     catalog_router,
     component_definition_router,
-    ssp_router
-    )
+    ssp_router,
+)
 from ip5_poc.api.triggers import trigger_router
 import logging
 
@@ -17,6 +17,7 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
