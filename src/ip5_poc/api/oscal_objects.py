@@ -1,6 +1,7 @@
 from typing import Any, List
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.encoders import jsonable_encoder
 from ip5_poc.core.dependencies import get_az_credentials, get_db
 from ip5_poc.models.generated_oscal_model import InformationType, Model, Model3, Model4, OscalCompleteOscalImplementationCommonSystemComponent, OscalCompleteOscalImplementationCommonSystemId, OscalCompleteOscalImplementationCommonSystemUser, OscalCompleteOscalMetadataLink, OscalCompleteOscalMetadataMetadata, OscalCompleteOscalMetadataProperty, OscalCompleteOscalSspAuthorizationBoundary, OscalCompleteOscalSspByComponent, OscalCompleteOscalSspControlImplementation, OscalCompleteOscalSspImplementedRequirement, OscalCompleteOscalSspImportProfile, OscalCompleteOscalSspStatus, OscalCompleteOscalSspSystemCharacteristics, OscalCompleteOscalSspSystemImplementation, OscalCompleteOscalSspSystemInformation, OscalCompleteOscalSspSystemSecurityPlan, Status
 from motor.motor_asyncio import AsyncIOMotorDatabase
@@ -53,6 +54,16 @@ poc_context = ProjectContext(
             "/subscriptions/55093e67-09be-455b-bee4-802b5ba38768/resourceGroups/ip5-scggov"
         ]
     )
+
+@ssp_router.get("/{ssp_id}.json", name="Get System Security Plan")
+async def read_ssp(ssp_id: UUID, db: AsyncIOMotorDatabase = Depends(get_db)):
+    entry = await db["ssps"].find_one(
+        {"system-security-plan.uuid": str(ssp_id)}, {"_id": 0}
+    )
+    if entry is None:
+        raise HTTPException(status_code=404, detail="System security plan not found")
+    else:
+        return Model.model_validate(entry).model_dump(by_alias=True, exclude_none=True)
 
 @ssp_router.post("", name = "Create system security plan by analyzing project context")
 async def create_ssp(context: ProjectContext = poc_context, credential: DefaultAzureCredential=Depends(get_az_credentials), db: AsyncIOMotorDatabase = Depends(get_db)):
@@ -154,8 +165,9 @@ async def create_ssp(context: ProjectContext = poc_context, credential: DefaultA
 
 
     current_time=datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
+    ssp_id=uuid.uuid4()
     ssp = OscalCompleteOscalSspSystemSecurityPlan(
-        uuid=str(uuid.uuid4()),
+        uuid=str(ssp_id),
         metadata=OscalCompleteOscalMetadataMetadata(
             title=context.name,
             published=current_time,
@@ -213,7 +225,15 @@ async def create_ssp(context: ProjectContext = poc_context, credential: DefaultA
         )
     )
 
-    return Model4(system_security_plan=ssp).model_dump(by_alias=True, exclude_none=True)
+    ssp_model = Model4(system_security_plan=ssp)
+
+    await db["ssps"].insert_one(
+        jsonable_encoder(
+            ssp_model.model_dump(by_alias=True, exclude_none=True)
+        )
+    )
+
+    return ssp_model.model_dump(by_alias=True, exclude_none=True)
 
 
 def _get_az_ressources(azure_paths: list[str], az_credential: DefaultAzureCredential) -> list[AzureCloudRessource]:
