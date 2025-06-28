@@ -16,8 +16,13 @@ COPY README.md ./
 RUN poetry config virtualenvs.create false \
     && poetry install --only main
 
+# Add entrypoint
+COPY entrypoint.sh ./
+RUN chmod +x ./entrypoint.sh
+ENV ENV=prod
+
 # Expose port
 EXPOSE 8000
 
 # Run FastAPI using Uvicorn
-CMD ["uvicorn", "ip5_poc.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["./entrypoint.sh"]

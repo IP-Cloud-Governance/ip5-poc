@@ -30,8 +30,8 @@ poetry update
 # Login to az cli, so that the az sdk can access azure in the background with personal user context
 az login
 
-# Start fastAPI
-fastapi dev src/ip5_poc/main.py
+# Start app
+docker compose up --build
 
 # If needed: Regenerate pydantic model based on latest json schema definition from OSCAL NIST
 # Current used one is 1.1.3 https://pages.nist.gov/OSCAL-Reference/models/v1.1.3/complete/json-outline/

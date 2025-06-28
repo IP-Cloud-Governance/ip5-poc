@@ -9,11 +9,10 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 import logging
 
 MONGO_URL = "mongodb://user:secret@localhost:27017/"
-DB_NAME = "mydatabase"
 
 
-def connect() -> AsyncIOMotorClient:
-    return AsyncIOMotorClient(MONGO_URL)
+def connect(mongo_url: str) -> AsyncIOMotorClient:
+    return AsyncIOMotorClient(mongo_url)
 
 
 logger = logging.getLogger(__name__)

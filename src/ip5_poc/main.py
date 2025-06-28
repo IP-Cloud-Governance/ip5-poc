@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from ip5_poc.settings import settings
 from ip5_poc.db import connect, load_json_into_db
 from ip5_poc.api.oscal_objects import (
     catalog_router,
@@ -22,7 +23,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Connect to MongoDB
-    mongo_client = connect()
+    mongo_client = connect(settings.mongo_url)
     app.state.db = mongo_client["ip5poc"]
     await load_json_into_db(app.state.db)
 
@@ -34,7 +35,7 @@ async def lifespan(app: FastAPI):
 
 
 # General setup of fast api
-app = FastAPI(title="ip5-poc OSCAL", lifespan=lifespan)
+app = FastAPI(title="ip5-poc OSCAL", lifespan=lifespan,debug=settings.debug)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
