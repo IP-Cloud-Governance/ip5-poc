@@ -9,6 +9,7 @@ from ip5_poc.api.oscal_objects import (
     ssp_router,
 )
 from ip5_poc.api.triggers import trigger_router
+from ip5_poc.api.project import project_router
 import logging
 
 logging.basicConfig(
@@ -47,7 +48,8 @@ app.add_middleware(
 )
 
 # Router inclusions
+app.include_router(project_router)
+app.include_router(trigger_router)
 app.include_router(catalog_router)
 app.include_router(component_definition_router)
 app.include_router(ssp_router)
-app.include_router(trigger_router)

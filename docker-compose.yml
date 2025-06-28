@@ -1,15 +1,15 @@
 version: '3.8'
 
 services:
-  app:
-    build: .
-    ports:
-      - "8000:8000"
-    environment:
-      MONGO_URL: mongodb://user:secret@database:27017/
-      ENV: dev
-    volumes:
-      - ./src/:/app/src
+  # app:
+  #   build: .
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     MONGO_URL: mongodb://user:secret@database:27017/
+  #     ENV: dev
+  #   volumes:
+  #     - ./src/:/app/src
   database:
     image: mongo:6
     environment:

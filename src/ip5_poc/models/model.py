@@ -1,10 +1,17 @@
 from enum import Enum
+from uuid import UUID
 from pydantic import BaseModel
 from azure.mgmt.resource.resources.models import GenericResourceExpanded
 from pydantic import BaseModel, SerializationInfo, field_serializer
 
 
+class ProjectContextRequest(BaseModel):
+    name: str
+    aws_paths: list[str] = []
+    azure_paths: list[str] = []
+
 class ProjectContext(BaseModel):
+    id: UUID
     name: str
     aws_paths: list[str] = []
     azure_paths: list[str] = []
