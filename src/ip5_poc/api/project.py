@@ -48,4 +48,4 @@ async def get_ssp_for_project(project_id: uuid.UUID,db: AsyncIOMotorDatabase = D
     if project is None:
         raise HTTPException(status_code=404, detail=f"Project with id {str(project_id)} not found")
     
-    return await get_ssp_by_project(db=db, project_id=project_id)
+    return (await get_ssp_by_project(db=db, project_id=project_id)).model_dump(by_alias=True, exclude_none=True)

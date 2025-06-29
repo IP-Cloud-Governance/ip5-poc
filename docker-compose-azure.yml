@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  app:
+    image: ghcr.io/ip-cloud-governance/ip5-poc:sha-4b5f2a8
+    ports:
+      - "8000:8080"
+    environment:
+      MONGO_URL: mongodb://user:secret@database:27017/
+      ENV: dev
+      AZ_USE_SP_AUTHENTICATION: ${AZ_USE_SP_AUTHENTICATION}
+      AZ_TENANT_ID: ${AZ_TENANT_ID}
+      AZ_CLIENT_ID: ${AZ_CLIENT_ID}
+      AZ_CLIENT_SECRET: ${AZ_CLIENT_SECRET}
+      API_KEY: ${API_KEY}
+  database:
+    image: mongo:6
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      MONGO_INITDB_DATABASE: ip5poc
+    volumes:
+      - "db_data:/data/db"
+
+volumes:
+  db_data:

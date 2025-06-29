@@ -56,7 +56,7 @@ async def get_ssp_by_project(project_id: uuid.UUID, db: AsyncIOMotorDatabase) ->
     if entry is None:
         raise HTTPException(status_code=404, detail="System security plan not found")
     else:
-        return Model.model_validate(entry).model_dump(by_alias=True, exclude_none=True)
+        return Model.model_validate(entry)
 
 
 async def create_ssp(
