@@ -1,13 +1,13 @@
 import uuid
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
-from ip5_poc.core.dependencies import get_az_credentials, get_db
+from ip5_poc.core.dependencies import get_api_key, get_az_credentials, get_db
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from azure.identity import DefaultAzureCredential
 from ip5_poc.models.model import CloudPlattform, CloudPlattformPath, ProjectContext, ProjectContextRequest
 from ip5_poc.services.oscal_service import create_ssp, get_ssp_by_project
 
-project_router = APIRouter(prefix="/projects", tags=["Project"])
+project_router = APIRouter(prefix="/projects", tags=["Project"], dependencies=[Depends(get_api_key)])
 
 poc_context_request = ProjectContextRequest(
     name="poc-resource",

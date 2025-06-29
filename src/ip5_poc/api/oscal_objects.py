@@ -1,6 +1,6 @@
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
-from ip5_poc.core.dependencies import get_db
+from ip5_poc.core.dependencies import get_api_key, get_db
 from ip5_poc.models.generated_oscal_model import (
     Model,
 )
@@ -12,9 +12,9 @@ import ip5_poc.services.oscal_service as oscal_service
 
 logger = logging.getLogger(__name__)
 
-component_definition_router = APIRouter(prefix="/component-definitions", tags=["OSCAL"])
-catalog_router = APIRouter(prefix="/catalogs", tags=["OSCAL"])
-ssp_router = APIRouter(prefix="/system-security-plans", tags=["OSCAL"])
+component_definition_router = APIRouter(prefix="/component-definitions", tags=["OSCAL"], dependencies=[Depends(get_api_key)])
+catalog_router = APIRouter(prefix="/catalogs", tags=["OSCAL"], dependencies=[Depends(get_api_key)])
+ssp_router = APIRouter(prefix="/system-security-plans", tags=["OSCAL"], dependencies=[Depends(get_api_key)])
 
 
 @catalog_router.get("/{catalog_id}.json", name="Get catalog with all components")

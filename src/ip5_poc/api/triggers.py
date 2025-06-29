@@ -1,12 +1,12 @@
 from uuid import UUID
 from fastapi import APIRouter, Depends
-from ip5_poc.core.dependencies import get_az_credentials, get_db
+from ip5_poc.core.dependencies import get_api_key, get_az_credentials, get_db
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.resource import PolicyClient
 from ip5_poc.services import project_service,oscal_service
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
-trigger_router = APIRouter(prefix="/triggers", tags=["Manual triggering"])
+trigger_router = APIRouter(prefix="/triggers", tags=["Manual triggering"], dependencies=[Depends(get_api_key)])
 
 
 @trigger_router.post(

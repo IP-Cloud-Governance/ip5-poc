@@ -12,6 +12,7 @@ services:
       AZ_TENANT_ID: ${AZ_TENANT_ID}
       AZ_CLIENT_ID: ${AZ_CLIENT_ID}
       AZ_CLIENT_SECRET: ${AZ_CLIENT_SECRET}
+      API_KEY: ${API_KEY}
     volumes:
       - ./src/:/app/src
   database:
