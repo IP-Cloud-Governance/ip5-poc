@@ -51,6 +51,11 @@
                 "description": "Cryptographic key management for AKS nodes.",
                 "props": [
                   {
+                    "name" : "cac-policy",
+                    "remarks" : "Local authentication modes disabled only AD",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/993c2fcd-2b29-49d2-9eb0-df2c3a730c32"
+                  },
+                  {
                     "name" : "azure-policy",
                     "remarks" : "Local authentication modes disabled only AD",
                     "value": "/providers/Microsoft.Authorization/policyDefinitions/993c2fcd-2b29-49d2-9eb0-df2c3a730c32"

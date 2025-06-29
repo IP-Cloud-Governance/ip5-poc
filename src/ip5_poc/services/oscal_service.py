@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, List
 from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 from ip5_poc.models.generated_oscal_model import (
@@ -24,18 +24,21 @@ from ip5_poc.models.generated_oscal_model import (
     Status,
 )
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from azure.mgmt.resource.resources.models import GenericResourceExpanded
-from azure.mgmt.resource import ResourceManagementClient
 from azure.identity import DefaultAzureCredential
-from ip5_poc.models.model import AzureCloudRessource, ProjectContext, ProjectContextRequest
-import re
+from ip5_poc.models.model import (
+    AzureCloudRessource,
+    OscalPropertyIdentifier,
+    ProjectContext,
+)
 from datetime import datetime, timezone
+from ip5_poc.services import azure_service
 import uuid
 import logging
 
 logger = logging.getLogger(__name__)
 
-async def get_ssp(ssp_id: uuid.UUID, db: AsyncIOMotorDatabase):
+
+async def get_ssp(ssp_id: uuid.UUID, db: AsyncIOMotorDatabase) -> Model:
     entry = await db["ssps"].find_one(
         {"system-security-plan.uuid": str(ssp_id)}, {"_id": 0}
     )
@@ -43,13 +46,12 @@ async def get_ssp(ssp_id: uuid.UUID, db: AsyncIOMotorDatabase):
         raise HTTPException(status_code=404, detail="System security plan not found")
     else:
         return Model.model_validate(entry).model_dump(by_alias=True, exclude_none=True)
-    
-async def get_ssp_by_project(project_id: uuid.UUID, db: AsyncIOMotorDatabase):
+
+
+async def get_ssp_by_project(project_id: uuid.UUID, db: AsyncIOMotorDatabase) -> Model:
     entry = await db["ssps"].find_one(
-        {
-            "system-security-plan.system-characteristics.system-ids.id": str(project_id)
-        },
-        {"_id": 0}
+        {"system-security-plan.system-characteristics.system-ids.id": str(project_id)},
+        {"_id": 0},
     )
     if entry is None:
         raise HTTPException(status_code=404, detail="System security plan not found")
@@ -63,7 +65,7 @@ async def create_ssp(
     db: AsyncIOMotorDatabase,
 ):
     # Get azure resources based on project context
-    all_ressources: list[AzureCloudRessource] = _get_az_ressources(
+    all_ressources: list[AzureCloudRessource] = azure_service.get_az_ressources(
         azure_paths=context.azure_paths, az_credential=credential
     )
     identified_components: List[
@@ -96,13 +98,22 @@ async def create_ssp(
                 status=Status(state="state-of-resource"),
                 props=[
                     OscalCompleteOscalMetadataProperty(
-                        name="azure-region", value=resource.ressource.location
+                        name=OscalPropertyIdentifier.AZURE_REGION,
+                        value=resource.ressource.location,
                     ),
                     OscalCompleteOscalMetadataProperty(
                         name="azure-resource-type", value=resource.ressource.type
                     ),
                     OscalCompleteOscalMetadataProperty(
                         name="azure-resource-id", value=resource.ressource.id
+                    ),
+                    OscalCompleteOscalMetadataProperty(
+                        name="cac-project-serach-id",
+                        value=str(resource.search_basis.id),
+                    ),
+                    OscalCompleteOscalMetadataProperty(
+                        name="cac-plattform-type",
+                        value=str(resource.search_basis.plattform),
                     ),
                 ],
             )
@@ -134,21 +145,32 @@ async def create_ssp(
                 status=Status(state="state-of-resource"),
                 props=[
                     OscalCompleteOscalMetadataProperty(
-                        name="azure-region", value=resource.ressource.location
+                        name=OscalPropertyIdentifier.AZURE_REGION,
+                        value=resource.ressource.location,
                     ),
                     OscalCompleteOscalMetadataProperty(
-                        name="azure-resource-type", value=resource.ressource.type
+                        name=OscalPropertyIdentifier.AZURE_RESOURCE_TYPE,
+                        value=resource.ressource.type,
                     ),
                     OscalCompleteOscalMetadataProperty(
-                        name="azure-resource-id", value=resource.ressource.id
+                        name=OscalPropertyIdentifier.AZURE_RESOURCE_ID,
+                        value=resource.ressource.id,
                     ),
                     OscalCompleteOscalMetadataProperty(
-                        name="oscal-derived-component-definition-uuid",
-                        value=str(wrapper.uuid),
+                        name=OscalPropertyIdentifier.OSCAL_DERIVED_COMPONENT_DEFINITION_UUID,
+                        value=str(wrapper.uuid.root),
                     ),
                     OscalCompleteOscalMetadataProperty(
-                        name="oscal-derived-component-uuid",
-                        value=str(predef_component.uuid),
+                        name=OscalPropertyIdentifier.OSCAL_DERIVED_COMPONENT_UUID,
+                        value=str(predef_component.uuid.root),
+                    ),
+                    OscalCompleteOscalMetadataProperty(
+                        name=OscalPropertyIdentifier.CAC_PROJECT_SEARCH_ID,
+                        value=str(resource.search_basis.id),
+                    ),
+                    OscalCompleteOscalMetadataProperty(
+                        name=OscalPropertyIdentifier.CAC_PLATTFORM_TYPE,
+                        value=str(resource.search_basis.plattform),
                     ),
                 ],
             )
@@ -167,7 +189,7 @@ async def create_ssp(
                         OscalCompleteOscalSspByComponent(
                             component_uuid=current_comp.uuid,
                             uuid=str(uuid.uuid4()),
-                            description=f"{req.control_id} is implemented by {resource.ressource.id}",
+                            description=f"{req.control_id.root} is implemented by {resource.ressource.id}",
                         )
                     ],
                 )
@@ -240,39 +262,3 @@ async def create_ssp(
     )
 
     return ssp_model.model_dump(by_alias=True, exclude_none=True)
-
-
-def _get_az_ressources(
-    azure_paths: list[str], az_credential: DefaultAzureCredential
-) -> list[AzureCloudRessource]:
-    """
-    Retrieve ressources based on project configuration
-    """
-    all_ressources: list[GenericResourceExpanded] = []
-
-    # Retrieve ressources of subscription
-    subscription_pattern = r"^/subscriptions/(?P<subscription_id>[0-9a-fA-F-]{36})$"
-    rg_pattern = r"^/subscriptions/(?P<subscription_id>[0-9a-fA-F-]{36})/resourceGroups/(?P<resource_group>[^/]+)$"
-
-    # Lookup ressources from azure
-    for path in azure_paths:
-        subscription_match = re.fullmatch(subscription_pattern, path)
-        rg_match = re.fullmatch(rg_pattern, path)
-        logger.info(f"search in azure for {path}")
-        if subscription_match:
-            # Retrieve ressources of subscription
-            subscription_id = subscription_match.group("subscription_id")
-            client = ResourceManagementClient(az_credential, subscription_id)
-            all_ressources += client.resources.list()
-        elif rg_match:
-            # Retrieve groups of of subscription
-            subscription_id = rg_match.group("subscription_id")
-            rg_name = rg_match.group("resource_group")
-            client = ResourceManagementClient(az_credential, subscription_id)
-            all_ressources += client.resources.list_by_resource_group(rg_name)
-
-    all_ressources.sort(key=lambda x: x.id)
-
-    # Unique resources / without duplicates
-    unique_list = list({res.id: res for res in all_ressources}.values())
-    return list(map(lambda r: AzureCloudRessource(ressource=r), unique_list))
