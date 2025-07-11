@@ -69,7 +69,7 @@ async def get_project(
     )
 
 
-@project_router.get("/{project_id}/ssp")
+@project_router.get("/{project_id}/system-security-plan")
 async def get_ssp_for_project(
     project_id: uuid.UUID, db: AsyncIOMotorDatabase = Depends(get_db)
 ):
@@ -82,3 +82,9 @@ async def get_ssp_for_project(
     return (await get_ssp_by_project(db=db, project_id=project_id)).model_dump(
         by_alias=True, exclude_none=True
     )
+
+@project_router.get("/{project_id}/assessment-plan")
+async def get_ssp_for_project(
+    project_id: uuid.UUID, db: AsyncIOMotorDatabase = Depends(get_db)
+):
+    return ""

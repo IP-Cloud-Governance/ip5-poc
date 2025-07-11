@@ -9,7 +9,9 @@ from azure.mgmt.resource.policy.models import (
     PolicyDefinitionReference,
     PolicySetDefinition,
 )
+from ip5_poc.models.generated_oscal_model import OscalCompleteOscalApAssessmentPlan, OscalCompleteOscalAssessmentCommonImportSsp, OscalCompleteOscalAssessmentCommonTask, OscalCompleteOscalMetadataProperty, Type4
 from ip5_poc.models.model import (
+    CacTaskType,
     CloudPlattform,
     CloudPlattformPath,
     MongoDBCollections,
@@ -20,6 +22,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from azure.core.exceptions import ResourceNotFoundError
 import logging
 import re
+import uuid
 
 from ip5_poc.services.azure_service import get_rg_pattern
 
@@ -220,6 +223,43 @@ async def deploy_policies(
                     }
                 }
             )
+
+    # Create assessment-plan with pre-defined task for assingning policy initiatives
+    updated_project = await project_service.get_project(project_id=project_id, db=db)
+
+    # TODO create assessment plan and persist it
+    # TODO run assessment plan -> create initiative assignment
+    for path in updated_project.azure_paths:
+        task = OscalCompleteOscalAssessmentCommonTask(
+            uuid=str(uuid.uuid4()),
+            description="Check ressources in scope of",
+            type=Type4.action,
+            props=[
+                OscalCompleteOscalMetadataProperty(
+                    uuid=str(uuid.uuid4()),
+                    name=OscalPropertyIdentifier.CAC_TASK_TYPE,
+                    value=CacTaskType.CAC_SEARCH_PATH_CHECK,
+                )
+            ],
+            tasks=[
+                # TODO 2 tasks ... one for policy iniative assginemnt, one for checking it during assessment
+            ]
+        )
+
+
+    assessment_plan = OscalCompleteOscalApAssessmentPlan(
+        uuid=str(uuid.uuid4()),
+        import_ssp=OscalCompleteOscalAssessmentCommonImportSsp(
+            href=str(ssp.uuid)
+        ),
+        tasks=[
+            OscalCompleteOscalAssessmentCommonTask(
+                uuid=str(uuid.uuid4()),
+                description="Check ressources in scope of",
+                type=Type4.action,
+            )
+        ]
+    )
 
     return await project_service.get_project(project_id=project_id, db=db)
 

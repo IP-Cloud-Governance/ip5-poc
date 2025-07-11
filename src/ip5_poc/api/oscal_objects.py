@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 component_definition_router = APIRouter(prefix="/component-definitions", tags=["OSCAL"], dependencies=[Depends(get_api_key)])
 catalog_router = APIRouter(prefix="/catalogs", tags=["OSCAL"], dependencies=[Depends(get_api_key)])
 ssp_router = APIRouter(prefix="/system-security-plans", tags=["OSCAL"], dependencies=[Depends(get_api_key)])
+ap_router = APIRouter(prefix="/assessment-plan", tags=["OSCAL"], dependencies=[Depends(get_api_key)])
 
 
 @catalog_router.get("/{catalog_id}.json", name="Get catalog with all components")
@@ -53,3 +54,8 @@ poc_context = ProjectContextRequest(
 @ssp_router.get("/{ssp_id}.json", name="Get System Security Plan")
 async def read_ssp(ssp_id: UUID, db: AsyncIOMotorDatabase = Depends(get_db)):
     return await oscal_service.get_ssp(db=db, ssp_id=ssp_id)
+
+
+@ap_router.get("/{assessment_plan_id}")
+async def get_assessment_plan(assessment_plan_id: UUID, db: AsyncIOMotorDatabase = Depends(get_db)):
+    return ""

@@ -53,6 +53,7 @@ class MongoDBCollections(Enum):
     COMPONENT_DEFINITIONS='component-definitions'
     PROJECTS='projects'
     SYSTEM_SECURITY_PLANS='ssps'
+    ASSESSMENT_PLAN='assessment-plan'
 
 class OscalPropertyIdentifier(Enum):
     AZURE_REGION='azure-region'
@@ -61,7 +62,13 @@ class OscalPropertyIdentifier(Enum):
     AZURE_RESOURCE_ID='azure-resource-id'
     OSCAL_DERIVED_COMPONENT_DEFINITION_UUID='oscal-derived-component-definition-uuid'
     OSCAL_DERIVED_COMPONENT_UUID='oscal-derived-component-uuid'
+    CAC_TASK_TYPE='cac-ap-task-type'
     CAC_PROJECT_ID='cac-project-id'
     CAC_PROJECT_SEARCH_ID='cac-project-serach-id'
     CAC_PROJECT_TYPE='cac-plattform-type'
     CAC_PLATTFORM_TYPE='cac-plattform-type'
+
+class CacTaskType(Enum):
+    CAC_SEARCH_PATH_CHECK='cac-search-path-check'
+    AZURE_DEPLOY_INITIATIVE='azure-deploy-initiative'
+    AZURE_CHECK_INITAITVE='azure-check-initiative'
