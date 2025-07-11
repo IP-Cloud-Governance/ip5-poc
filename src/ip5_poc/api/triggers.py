@@ -12,10 +12,12 @@ from azure.mgmt.resource.policy.models import (
 from ip5_poc.models.model import (
     CloudPlattform,
     CloudPlattformPath,
+    MongoDBCollections,
     OscalPropertyIdentifier,
 )
 from ip5_poc.services import project_service, oscal_service
 from motor.motor_asyncio import AsyncIOMotorDatabase
+from azure.core.exceptions import ResourceNotFoundError
 import logging
 import re
 
@@ -154,9 +156,9 @@ async def deploy_policies(
             policy_set_definitions,
         )
     )
+    azure_policies_subset = _merge_policy_sets(azure_policies_subset)
 
     # Create azure policy initiative
-
     for azure_policy_set in azure_policies_subset:
         match = re.fullmatch(get_rg_pattern(), azure_policy_set.searchPath.path)
         policy_client_subscription_id = match.group("subscription_id")
@@ -186,18 +188,40 @@ async def deploy_policies(
         logger.info(
             f"Try to create policy {policy_set_definition_name} for project {project.name} with id {str(project.id)}"
         )
-        logger.info(_merge_policy_sets(azure_policies_subset))
+
+        logger.info("Check if policy is already existing")
+        try:
+            policy_client.policy_definitions.get(
+                policy_definition_name=policy_set_definition_name
+            )
+            logger.info(f"Policy for {policy_set_definition_name} exisnting")
+            logger.info(f"Try UPDATING policy {policy_set_definition_name}")
+        except ResourceNotFoundError:
+            logger.info(f"Policy for {policy_set_definition_name} is not found")
+            logger.info(f"Try CREATING policy {policy_set_definition_name}")
+
         result = policy_client.policy_set_definitions.create_or_update(
             policy_set_definition_name=policy_set_definition_name,
             parameters=initiative_definition,
         )
-        if result:
-            logger.info(f"Created policy with id {result.id}")
-            logger.info(result)
 
-    # TODO CONTINUE HERE with merging policies of azure_policies_subset together to get one search path and all policies
-    # then create a initiaite and deploy it for the scope set in the serach path
-    return _merge_policy_sets(azure_policies_subset)
+        if result:
+            logger.info(f"Created/updated policy with id {result.id}")
+
+            # Update project context with policy initiative id if not already exitsing
+            await db[MongoDBCollections.PROJECTS.value].update_one(
+                {
+                    'id': str(project_id),
+                    'azure_paths.id': str(azure_policy_set.searchPath.id)
+                },
+                {
+                    '$addToSet': {
+                        'azure_paths.$.plattform_policy_reference' : result.id
+                    }
+                }
+            )
+
+    return await project_service.get_project(project_id=project_id, db=db)
 
 
 def _merge_policy_sets(

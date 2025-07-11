@@ -13,6 +13,7 @@ class CloudPlattformPath(BaseModel):
     id: UUID
     path: str
     plattform: CloudPlattform
+    plattform_policy_reference: list[str] = []
 
     # model_config = ConfigDict(use_enum_values=True)
 
@@ -47,6 +48,11 @@ class AzureCloudRessource(CloudRessource):
     # class Config:
     #     arbitrary_types_allowed = True
 
+class MongoDBCollections(Enum):
+    CATALOGS='catalogs'
+    COMPONENT_DEFINITIONS='component-definitions'
+    PROJECTS='projects'
+    SYSTEM_SECURITY_PLANS='ssps'
 
 class OscalPropertyIdentifier(Enum):
     AZURE_REGION='azure-region'

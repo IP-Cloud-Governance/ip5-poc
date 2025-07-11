@@ -27,6 +27,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from azure.identity import DefaultAzureCredential
 from ip5_poc.models.model import (
     AzureCloudRessource,
+    MongoDBCollections,
     OscalPropertyIdentifier,
     ProjectContext,
 )
@@ -39,7 +40,7 @@ logger = logging.getLogger(__name__)
 
 
 async def get_ssp(ssp_id: uuid.UUID, db: AsyncIOMotorDatabase) -> Model:
-    entry = await db["ssps"].find_one(
+    entry = await db[MongoDBCollections.SYSTEM_SECURITY_PLANS.value].find_one(
         {"system-security-plan.uuid": str(ssp_id)}, {"_id": 0}
     )
     if entry is None:
@@ -49,7 +50,7 @@ async def get_ssp(ssp_id: uuid.UUID, db: AsyncIOMotorDatabase) -> Model:
 
 
 async def get_ssp_by_project(project_id: uuid.UUID, db: AsyncIOMotorDatabase) -> Model:
-    entry = await db["ssps"].find_one(
+    entry = await db[MongoDBCollections.SYSTEM_SECURITY_PLANS.value].find_one(
         {"system-security-plan.system-characteristics.system-ids.id": str(project_id)},
         {"_id": 0},
     )
@@ -78,7 +79,7 @@ async def create_ssp(
     for resource in all_ressources:
         logger.info(f"{resource.ressource.type}")
         components_definitions: list[Any] = (
-            await db["component-definitions"]
+            await db[MongoDBCollections.COMPONENT_DEFINITIONS.value]
             .find(
                 {
                     "component-definition.components.props.value": resource.ressource.type
@@ -257,7 +258,7 @@ async def create_ssp(
 
     ssp_model = Model4(system_security_plan=ssp)
 
-    await db["ssps"].insert_one(
+    await db[MongoDBCollections.SYSTEM_SECURITY_PLANS.value].insert_one(
         jsonable_encoder(ssp_model.model_dump(by_alias=True, exclude_none=True))
     )
 

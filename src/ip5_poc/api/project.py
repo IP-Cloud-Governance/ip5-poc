@@ -7,6 +7,7 @@ from azure.identity import DefaultAzureCredential
 from ip5_poc.models.model import (
     CloudPlattform,
     CloudPlattformPath,
+    MongoDBCollections,
     ProjectContext,
     ProjectContextRequest,
 )
@@ -46,7 +47,7 @@ async def post_project(
             for p in project_context.aws_paths
         ],
     )
-    await db["projects"].insert_one(
+    await db[MongoDBCollections.PROJECTS.value].insert_one(
         jsonable_encoder(project.model_dump(by_alias=True, exclude_none=True))
     )
     await create_ssp(context=project, credential=credential, db=db)
@@ -58,7 +59,7 @@ async def get_project(
     project_id: uuid.UUID,
     db: AsyncIOMotorDatabase = Depends(get_db),
 ):
-    project = await db["projects"].find_one({"id": str(project_id)}, {"_id": 0})
+    project = await db[MongoDBCollections.PROJECTS.value].find_one({"id": str(project_id)}, {"_id": 0})
     if project is None:
         raise HTTPException(
             status_code=404, detail=f"Project with id {str(project_id)} not found"
@@ -72,7 +73,7 @@ async def get_project(
 async def get_ssp_for_project(
     project_id: uuid.UUID, db: AsyncIOMotorDatabase = Depends(get_db)
 ):
-    project = await db["projects"].find_one({"id": str(project_id)}, {"_id": 0})
+    project = await db[MongoDBCollections.PROJECTS.value].find_one({"id": str(project_id)}, {"_id": 0})
     if project is None:
         raise HTTPException(
             status_code=404, detail=f"Project with id {str(project_id)} not found"

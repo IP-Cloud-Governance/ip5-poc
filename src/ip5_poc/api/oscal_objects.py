@@ -5,7 +5,7 @@ from ip5_poc.models.generated_oscal_model import (
     Model,
 )
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from ip5_poc.models.model import ProjectContextRequest
+from ip5_poc.models.model import MongoDBCollections, ProjectContextRequest
 import logging
 import ip5_poc.services.oscal_service as oscal_service
 
@@ -19,7 +19,7 @@ ssp_router = APIRouter(prefix="/system-security-plans", tags=["OSCAL"], dependen
 
 @catalog_router.get("/{catalog_id}.json", name="Get catalog with all components")
 async def read_catalog(catalog_id: UUID, db: AsyncIOMotorDatabase = Depends(get_db)):
-    entry = await db["catalogs"].find_one({"catalog.uuid": str(catalog_id)}, {"_id": 0})
+    entry = await db[MongoDBCollections.CATALOGS.value].find_one({"catalog.uuid": str(catalog_id)}, {"_id": 0})
     if entry is None:
         raise HTTPException(status_code=404, detail="Catalog not found")
     else:
@@ -32,7 +32,7 @@ async def read_catalog(catalog_id: UUID, db: AsyncIOMotorDatabase = Depends(get_
 async def read_component_definition(
     component_definition_id: UUID, db: AsyncIOMotorDatabase = Depends(get_db)
 ):
-    entry = await db["component-definitions"].find_one(
+    entry = await db[MongoDBCollections.COMPONENT_DEFINITIONS.value].find_one(
         {"component-definition.uuid": str(component_definition_id)}, {"_id": 0}
     )
     if entry is None:

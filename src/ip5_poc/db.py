@@ -5,6 +5,7 @@ from pathlib import Path
 from ip5_poc.models.generated_oscal_model import (
     Model,
 )
+from ip5_poc.models.model import MongoDBCollections
 from motor.motor_asyncio import AsyncIOMotorDatabase
 import logging
 
@@ -29,12 +30,12 @@ async def load_json_into_db(db: AsyncIOMotorDatabase):
                 component_definition = json.load(f)
                 validated_model = Model.model_validate(component_definition)
                 catalog_id = validated_model.root.catalog.uuid.model_dump()
-                existing = await db["catalogs"].find_one(
+                existing = await db[MongoDBCollections.CATALOGS.value].find_one(
                     {"catalog.uuid": str(catalog_id)}
                 )
                 if existing is None:
                     logger.info(f"Insert catalog ${catalog_id}")
-                    await db["catalogs"].insert_one(
+                    await db[MongoDBCollections.CATALOGS.value].insert_one(
                         jsonable_encoder(
                             validated_model.model_dump(by_alias=True, exclude_none=True)
                         )
@@ -53,12 +54,12 @@ async def load_json_into_db(db: AsyncIOMotorDatabase):
                 component_id = (
                     validated_model.root.component_definition.uuid.model_dump()
                 )
-                existing = await db["component-definitions"].find_one(
+                existing = await db[MongoDBCollections.COMPONENT_DEFINITIONS.value].find_one(
                     {"component-definition.uuid": str(component_id)}
                 )
                 if existing is None:
                     logger.info(f"Insert component-definition ${component_id}")
-                    await db["component-definitions"].insert_one(
+                    await db[MongoDBCollections.COMPONENT_DEFINITIONS.value].insert_one(
                         jsonable_encoder(
                             validated_model.model_dump(by_alias=True, exclude_none=True)
                         )
