@@ -54,6 +54,11 @@
                     "name" : "azure-policy",
                     "remarks" : "Local authentication modes disabled only AD",
                     "value": "/providers/Microsoft.Authorization/policyDefinitions/993c2fcd-2b29-49d2-9eb0-df2c3a730c32"
+                  },
+                  {
+                    "name" : "azure-policy",
+                    "remarks" : "Configure diagnostics for aks",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/6c66c325-74c8-42fd-a286-a74b0e2939d8"
                   }
                 ]
               },
