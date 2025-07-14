@@ -1,6 +1,9 @@
 from collections import defaultdict
+from datetime import datetime, timezone
+from typing import DefaultDict
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from ip5_poc.core.dependencies import get_api_key, get_az_credentials, get_db
 from azure.identity import DefaultAzureCredential
@@ -9,7 +12,7 @@ from azure.mgmt.resource.policy.models import (
     PolicyDefinitionReference,
     PolicySetDefinition,
 )
-from ip5_poc.models.generated_oscal_model import OscalCompleteOscalApAssessmentPlan, OscalCompleteOscalAssessmentCommonImportSsp, OscalCompleteOscalAssessmentCommonTask, OscalCompleteOscalMetadataProperty, Type4
+from ip5_poc.models.generated_oscal_model import ControlSelection, Model5, OscalCompleteOscalApAssessmentPlan, OscalCompleteOscalAssessmentCommonAssessmentSubject, OscalCompleteOscalAssessmentCommonImportSsp, OscalCompleteOscalAssessmentCommonReviewedControls, OscalCompleteOscalAssessmentCommonSelectControlById, OscalCompleteOscalAssessmentCommonTask, OscalCompleteOscalMetadataMetadata, OscalCompleteOscalMetadataProperty, Type4
 from ip5_poc.models.model import (
     CacTaskType,
     CloudPlattform,
@@ -34,8 +37,9 @@ logger = logging.getLogger(__name__)
 
 
 class PolicySetDefinitions(BaseModel):
-    searchPath: CloudPlattformPath
-    cloudPaths: list[str]
+    search_path: CloudPlattformPath
+    policy_ids: list[str]
+    contorl_id: str
 
 
 @trigger_router.get(
@@ -51,8 +55,8 @@ async def analyze_deployment(
 
 
 @trigger_router.post(
-    "/projects/{project_id}/deploy",
-    name="Deploy policies according to project context information",
+    "/projects/{project_id}/assessment-plan",
+    name="Create assessment plan for system-security-plan of project",
 )
 async def deploy_policies(
     project_id: UUID,
@@ -63,12 +67,12 @@ async def deploy_policies(
     Collected policies of an ssp of a project and deploys them on the cloud
     """
     project = await project_service.get_project(project_id=project_id, db=db)
-    # policy_set_definitions: list[tuple[CloudPlattformPath, list[str]]] = []
     policy_set_definitions: list[PolicySetDefinitions] = []
     ssp_raw = await oscal_service.get_ssp_by_project(project_id=project_id, db=db)
     ssp = ssp_raw.root.system_security_plan
 
     # Gather policy references from the security plan assigned to the project
+    control_ids = set()
     for implemented_requirement in ssp.control_implementation.implemented_requirements:
         if len(implemented_requirement.by_components) is 0:
             raise HTTPException(
@@ -144,10 +148,12 @@ async def deploy_policies(
                         implemented_requirement.props,
                     )
                 )
+                control_ids.add(implemented_requirement.control_id.root)
                 policy_set_definitions.append(
                     PolicySetDefinitions(
-                        searchPath=search_item,
-                        cloudPaths=[p.value.root for p in azure_policies],
+                        search_path=search_item,
+                        contorl_id=implemented_requirement.control_id.root,
+                        policy_ids=[p.value.root for p in azure_policies],
                     )
                 )
                 # policy_set_definitions.append((search_item, [p.value for p in azure_policies]))
@@ -155,7 +161,7 @@ async def deploy_policies(
     # Merge azure policies
     azure_policies_subset = list(
         filter(
-            lambda x: x.searchPath.plattform == CloudPlattform.AZURE,
+            lambda x: x.search_path.plattform == CloudPlattform.AZURE,
             policy_set_definitions,
         )
     )
@@ -163,31 +169,31 @@ async def deploy_policies(
 
     # Create azure policy initiative
     for azure_policy_set in azure_policies_subset:
-        match = re.fullmatch(get_rg_pattern(), azure_policy_set.searchPath.path)
+        match = re.fullmatch(get_rg_pattern(), azure_policy_set.search_path.path)
         policy_client_subscription_id = match.group("subscription_id")
         policy_client = PolicyClient(
             credential=credential, subscription_id=policy_client_subscription_id
         )
 
         policy_definitions: list[PolicyDefinitionReference] = [
-            PolicyDefinitionReference(policy_definition_id=cloud_path)
-            for cloud_path in azure_policy_set.cloudPaths
+            PolicyDefinitionReference(policy_definition_id=policy_id)
+            for policy_id in azure_policy_set.policy_ids
         ]
 
         initiative_definition: PolicySetDefinition = PolicySetDefinition(
-            display_name=f"ip5sgcgov project {str(project.name)} for search {str(azure_policy_set.searchPath.id)}",
-            description=f"ip5sgcgov project {str(project.name)} for search {str(azure_policy_set.searchPath.id)}",
+            display_name=f"ip5sgcgov project {str(project.name)} for search {str(azure_policy_set.search_path.id)}",
+            description=f"ip5sgcgov project {str(project.name)} for search {str(azure_policy_set.search_path.id)}",
             policy_definitions=policy_definitions,
             metadata={
                 "category": "ip5sgcgov-project",
                 "ip5sgcgov-project-name": project.name,
                 "ip5sgcgov-project-id": str(project.id),
                 "ip5sgcgov-ssp-id": str(ssp.uuid.root),
-                "ip5sgcgov-search-path": azure_policy_set.searchPath.path,
-                "ip5sgcgov-search-path-id": azure_policy_set.searchPath.id,
+                "ip5sgcgov-search-path": azure_policy_set.search_path.path,
+                "ip5sgcgov-search-path-id": azure_policy_set.search_path.id,
             },
         )
-        policy_set_definition_name = f"ip5sgcgov-{str(azure_policy_set.searchPath.id)}"
+        policy_set_definition_name = f"ip5sgcgov-{str(azure_policy_set.search_path.id)}"
         logger.info(
             f"Try to create policy {policy_set_definition_name} for project {project.name} with id {str(project.id)}"
         )
@@ -215,7 +221,7 @@ async def deploy_policies(
             await db[MongoDBCollections.PROJECTS.value].update_one(
                 {
                     'id': str(project_id),
-                    'azure_paths.id': str(azure_policy_set.searchPath.id)
+                    'azure_paths.id': str(azure_policy_set.search_path.id)
                 },
                 {
                     '$addToSet': {
@@ -226,42 +232,122 @@ async def deploy_policies(
 
     # Create assessment-plan with pre-defined task for assingning policy initiatives
     updated_project = await project_service.get_project(project_id=project_id, db=db)
-
+    assessment_plan_tasks: list[OscalCompleteOscalAssessmentCommonTask] = []
     # TODO create assessment plan and persist it
     # TODO run assessment plan -> create initiative assignment
     for path in updated_project.azure_paths:
-        task = OscalCompleteOscalAssessmentCommonTask(
+        sub_tasks: list[OscalCompleteOscalAssessmentCommonTask] = []
+        for policy_initiative_id in path.plattform_policy_reference:
+            sub_tasks.append(
+                OscalCompleteOscalAssessmentCommonTask(
+                    uuid=str(uuid.uuid4()),
+                    description="Policy iniative is assigned to project context",
+                    title="Policy initiative assinged",
+                    type=Type4.action,
+                    props=[
+                        OscalCompleteOscalMetadataProperty(
+                            name=OscalPropertyIdentifier.CAC_TASK_TYPE.value,
+                            value=CacTaskType.AZURE_DEPLOY_INITIATIVE.value
+                        ),
+                        OscalCompleteOscalMetadataProperty(
+                            name=OscalPropertyIdentifier.AZURE_POLICY_INITIATIVE.value,
+                            # TODO make this more generic instead of using first policy initiative
+                            value=policy_initiative_id
+                        )
+                    ]
+                )
+            )
+            sub_tasks.append(
+                OscalCompleteOscalAssessmentCommonTask(
+                    uuid=str(uuid.uuid4()),
+                    description="Policy iniative is assigned to project context",
+                    title="Policy in initaitve are conformant",
+                    type=Type4.action,
+                    props=[
+                        OscalCompleteOscalMetadataProperty(
+                            name=OscalPropertyIdentifier.CAC_TASK_TYPE.value,
+                            value=CacTaskType.AZURE_CHECK_INITAITVE.value
+                        ),
+                        OscalCompleteOscalMetadataProperty(
+                            name=OscalPropertyIdentifier.AZURE_POLICY_INITIATIVE.value,
+                            # TODO make this more generic instead of using first policy initiative
+                            value=policy_initiative_id
+                        )
+                    ]
+                )
+            )
+
+            
+        policy_initiative_task = OscalCompleteOscalAssessmentCommonTask(
             uuid=str(uuid.uuid4()),
-            description="Check ressources in scope of",
+            title=f"Ressources in {path.path} are check",
+            description=f"Policy for ressourcen in {path.path} need to be compliant",
             type=Type4.action,
             props=[
                 OscalCompleteOscalMetadataProperty(
                     uuid=str(uuid.uuid4()),
-                    name=OscalPropertyIdentifier.CAC_TASK_TYPE,
-                    value=CacTaskType.CAC_SEARCH_PATH_CHECK,
+                    name=OscalPropertyIdentifier.CAC_TASK_TYPE.value,
+                    value=CacTaskType.CAC_SEARCH_PATH_CHECK.value,
                 )
             ],
-            tasks=[
-                # TODO 2 tasks ... one for policy iniative assginemnt, one for checking it during assessment
-            ]
+            tasks=sub_tasks
         )
+        assessment_plan_tasks.append(policy_initiative_task)
 
 
+    creation_date = datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
     assessment_plan = OscalCompleteOscalApAssessmentPlan(
         uuid=str(uuid.uuid4()),
         import_ssp=OscalCompleteOscalAssessmentCommonImportSsp(
             href=str(ssp.uuid)
         ),
-        tasks=[
-            OscalCompleteOscalAssessmentCommonTask(
-                uuid=str(uuid.uuid4()),
-                description="Check ressources in scope of",
-                type=Type4.action,
-            )
-        ]
+        metadata=OscalCompleteOscalMetadataMetadata(
+            title=f"AP for {updated_project.name}",
+            published=creation_date,
+            last_modified=creation_date,
+            version="0.1",
+            oscal_version="1.1.3",
+            props=[
+                OscalCompleteOscalMetadataProperty(
+                    name=OscalPropertyIdentifier.CAC_PROJECT_ID.value,
+                    value=str(project_id)
+                )
+            ]
+        ),
+        tasks=assessment_plan_tasks,
+        reviewed_controls=OscalCompleteOscalAssessmentCommonReviewedControls(
+            control_selections=[
+                ControlSelection(
+                    include_controls=[
+                        OscalCompleteOscalAssessmentCommonSelectControlById(
+                            control_id=id
+                        )
+                        for id in control_ids
+                    ]
+                )
+            ]
+        )
     )
 
-    return await project_service.get_project(project_id=project_id, db=db)
+    ap = await db[MongoDBCollections.ASSESSMENT_PLANS.value].find_one_and_replace(
+        filter={
+            "assessment-plan.metadata.props": {
+                "$elemMatch": {
+                    "name": OscalPropertyIdentifier.CAC_PROJECT_ID.value,
+                    "value": str(project_id)
+                }
+            }
+        },
+        projection={
+            "_id":0
+        },
+        replacement=jsonable_encoder(Model5(assessment_plan=assessment_plan).model_dump(by_alias=True, exclude_none=True)),
+        upsert=True
+    )
+
+    return Model5.model_validate(ap).model_dump(
+        by_alias=True, exclude_none=True
+    )
 
 
 def _merge_policy_sets(
@@ -270,10 +356,10 @@ def _merge_policy_sets(
     """
     Merge policy paths by same search query from which they originated
     """
-    grouped = defaultdict(list)
+    grouped: DefaultDict[str, list[PolicySetDefinitions]] = defaultdict(list)
 
     for policy in policy_sets:
-        key = policy.searchPath.id
+        key = policy.search_path.id
         grouped[key].append(policy)
 
     merged = []
@@ -281,12 +367,12 @@ def _merge_policy_sets(
         # Merge cloudPaths
         all_cloud_paths: list[str] = []
         for item in items:
-            all_cloud_paths.extend(item.cloudPaths)
+            all_cloud_paths.extend(item.policy_ids)
 
         # Reuse one of the identical searchPaths
         merged.append(
             PolicySetDefinitions(
-                searchPath=items[0].searchPath, cloudPaths=all_cloud_paths
+                search_path=items[0].search_path, policy_ids=all_cloud_paths, contorl_id=items[0].contorl_id
             )
         )
 

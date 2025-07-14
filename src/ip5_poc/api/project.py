@@ -4,10 +4,12 @@ from fastapi.encoders import jsonable_encoder
 from ip5_poc.core.dependencies import get_api_key, get_az_credentials, get_db
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from azure.identity import DefaultAzureCredential
+from ip5_poc.models.generated_oscal_model import Model5
 from ip5_poc.models.model import (
     CloudPlattform,
     CloudPlattformPath,
     MongoDBCollections,
+    OscalPropertyIdentifier,
     ProjectContext,
     ProjectContextRequest,
 )
@@ -87,4 +89,25 @@ async def get_ssp_for_project(
 async def get_ssp_for_project(
     project_id: uuid.UUID, db: AsyncIOMotorDatabase = Depends(get_db)
 ):
-    return ""
+    project = await db[MongoDBCollections.PROJECTS.value].find_one({"id": str(project_id)}, {"_id": 0})
+    if project is None:
+        raise HTTPException(
+            status_code=404, detail=f"Project with id {str(project_id)} not found"
+        )
+    ap = await db[MongoDBCollections.ASSESSMENT_PLANS.value].find_one(
+        filter={
+            "assessment-plan.metadata.props": {
+                "$elemMatch": {
+                    "name": OscalPropertyIdentifier.CAC_PROJECT_ID.value,
+                    "value": str(project_id)
+                }
+            }
+        },
+        projection={
+            "_id":0
+        }
+    )
+
+    return Model5.model_validate(ap).model_dump(
+        by_alias=True, exclude_none=True
+    )

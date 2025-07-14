@@ -39,6 +39,15 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+async def get_assessment_plan(ap_id: uuid.UUID, db: AsyncIOMotorDatabase) -> Model:
+    entry = await db[MongoDBCollections.ASSESSMENT_PLANS.value].find_one(
+        {"assessment-plan.uuid": str(ap_id)}, {"_id": 0}
+    )
+    if entry is None:
+        raise HTTPException(status_code=404, detail="Assessment plan not found")
+    else:
+        return Model.model_validate(entry).model_dump(by_alias=True, exclude_none=True)
+
 async def get_ssp(ssp_id: uuid.UUID, db: AsyncIOMotorDatabase) -> Model:
     entry = await db[MongoDBCollections.SYSTEM_SECURITY_PLANS.value].find_one(
         {"system-security-plan.uuid": str(ssp_id)}, {"_id": 0}

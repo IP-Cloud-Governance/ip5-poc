@@ -53,11 +53,12 @@ class MongoDBCollections(Enum):
     COMPONENT_DEFINITIONS='component-definitions'
     PROJECTS='projects'
     SYSTEM_SECURITY_PLANS='ssps'
-    ASSESSMENT_PLAN='assessment-plan'
+    ASSESSMENT_PLANS='assessment-plans'
 
 class OscalPropertyIdentifier(Enum):
     AZURE_REGION='azure-region'
     AZURE_POLICY='azure-policy'
+    AZURE_POLICY_INITIATIVE='azure-policy-intiative'
     AZURE_RESOURCE_TYPE='azure-resource-type'
     AZURE_RESOURCE_ID='azure-resource-id'
     OSCAL_DERIVED_COMPONENT_DEFINITION_UUID='oscal-derived-component-definition-uuid'

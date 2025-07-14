@@ -7,6 +7,7 @@ from ip5_poc.api.oscal_objects import (
     catalog_router,
     component_definition_router,
     ssp_router,
+    ap_router
 )
 from ip5_poc.api.triggers import trigger_router
 from ip5_poc.api.project import project_router
@@ -53,3 +54,4 @@ app.include_router(trigger_router)
 app.include_router(catalog_router)
 app.include_router(component_definition_router)
 app.include_router(ssp_router)
+app.include_router(ap_router)

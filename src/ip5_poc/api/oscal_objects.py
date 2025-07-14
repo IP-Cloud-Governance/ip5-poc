@@ -58,4 +58,4 @@ async def read_ssp(ssp_id: UUID, db: AsyncIOMotorDatabase = Depends(get_db)):
 
 @ap_router.get("/{assessment_plan_id}")
 async def get_assessment_plan(assessment_plan_id: UUID, db: AsyncIOMotorDatabase = Depends(get_db)):
-    return ""
+    return await oscal_service.get_assessment_plan(db=db, ap_id=assessment_plan_id)
