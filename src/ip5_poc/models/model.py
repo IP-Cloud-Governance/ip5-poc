@@ -48,6 +48,11 @@ class AzureCloudRessource(CloudRessource):
     # class Config:
     #     arbitrary_types_allowed = True
 
+class PolicySetDefinitions(BaseModel):
+    search_path: CloudPlattformPath
+    policy_ids: list[str]
+    contorl_id: str
+
 class MongoDBCollections(Enum):
     CATALOGS='catalogs'
     COMPONENT_DEFINITIONS='component-definitions'
