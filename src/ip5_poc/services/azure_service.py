@@ -6,7 +6,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 def get_subscription_pattern() -> str:
     return r"^/subscriptions/(?P<subscription_id>[0-9a-fA-F-]{36})$"
 
@@ -54,3 +53,14 @@ def get_az_ressources(
 
     # Unique resources / without duplicates
     return list({res.ressource.id: res for res in all_ressources}.values())
+
+def get_subscription_id_from_path(path: str) -> str | None:
+    rg_match = re.fullmatch(get_rg_pattern(), path)
+    subscription_match = re.fullmatch(get_subscription_pattern(), path)
+    if rg_match:
+        return rg_match.group("subscription_id")
+    elif subscription_match:
+        return subscription_match.group("subscription_id")
+    else:
+        logger.info(f"No azure subscription id was found in the path {path}")
+        return None

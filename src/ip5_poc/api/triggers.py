@@ -24,16 +24,20 @@ class PolicySetDefinitions(BaseModel):
     contorl_id: str
 
 
-@trigger_router.get(
+@trigger_router.post(
     "/projects/{project_id}/assessment-result",
-    name="Get assesment result for current state of ressources",
+    name="Perform an assessment and create an result based on the latest assessment plan",
 )
 async def analyze_deployment(
     project_id: UUID,
     credential: DefaultAzureCredential = Depends(get_az_credentials),
     db: AsyncIOMotorDatabase = Depends(get_db),
 ):
-    return "Not implemeted yet"
+    await assessment_service.create_assessment(
+        credential=credential,
+        db=db,
+        project_id=project_id
+    )
 
 
 @trigger_router.post(

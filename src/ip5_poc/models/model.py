@@ -29,6 +29,18 @@ class ProjectContext(BaseModel):
     azure_paths: list[CloudPlattformPath] = []
     model_config = ConfigDict(frozen=True)
 
+class AzurePolicyDefinitionAssignment(BaseModel):
+    id: str
+    name: str
+
+class AzurePolicyDefinition(BaseModel):
+    id: str
+    name: str
+    plattform: CloudPlattform
+    metadata: dict
+    assignment_ids: list[str] = []
+    assignment: AzurePolicyDefinitionAssignment | None = None
+
 class CloudRessource(BaseModel):
     plattform: CloudPlattform
 
@@ -59,6 +71,7 @@ class MongoDBCollections(Enum):
     PROJECTS='projects'
     SYSTEM_SECURITY_PLANS='ssps'
     ASSESSMENT_PLANS='assessment-plans'
+    POLICY_DEFINITIONS='policy_definitions'
 
 class OscalPropertyIdentifier(Enum):
     AZURE_REGION='azure-region'
