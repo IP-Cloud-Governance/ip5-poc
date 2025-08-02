@@ -41,6 +41,7 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
-    - name: Trigger Azure Web App redeploy via webhook
-      run: |
-        curl -s -v -X POST "https://$ip5-poc-webapp:5l46d5s61Ken4iECh91TQ8wlnCR3cQ3G8taJNbysNkrRmPohMc764p52ZGds@ip5-poc-webapp.scm.azurewebsites.net/api/registry/webhook" -H "" -d ""
+    # Comment out step as it fails
+    # - name: Trigger Azure Web App redeploy via webhook
+    #   run: |
+    #     curl -s -v -X POST "https://$ip5-poc-webapp:5l46d5s61Ken4iECh91TQ8wlnCR3cQ3G8taJNbysNkrRmPohMc764p52ZGds@ip5-poc-webapp.scm.azurewebsites.net/api/registry/webhook" -H "" -d ""
