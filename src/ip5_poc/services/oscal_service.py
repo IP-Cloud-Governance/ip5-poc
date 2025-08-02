@@ -39,6 +39,27 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+
+async def get_assessment_plan_by_project(project_id: uuid.UUID, db: AsyncIOMotorDatabase) -> Model:
+    # TODO improve error handling
+    entry = await db[MongoDBCollections.ASSESSMENT_PLANS.value].find_one(
+        filter={
+            "assessment-plan.metadata.props": {
+                "$elemMatch": {
+                    "name": OscalPropertyIdentifier.CAC_PROJECT_ID.value,
+                    "value": str(project_id)
+                }
+            }
+        },
+        projection={
+            "_id":0
+        },
+    )
+    if entry is None:
+        raise HTTPException(status_code=404, detail="Assessment plan not found")
+    else:
+        return Model.model_validate(entry)
+
 async def get_assessment_plan(ap_id: uuid.UUID, db: AsyncIOMotorDatabase) -> Model:
     entry = await db[MongoDBCollections.ASSESSMENT_PLANS.value].find_one(
         {"assessment-plan.uuid": str(ap_id)}, {"_id": 0}
@@ -46,7 +67,7 @@ async def get_assessment_plan(ap_id: uuid.UUID, db: AsyncIOMotorDatabase) -> Mod
     if entry is None:
         raise HTTPException(status_code=404, detail="Assessment plan not found")
     else:
-        return Model.model_validate(entry).model_dump(by_alias=True, exclude_none=True)
+        return Model.model_validate(entry)
 
 async def get_ssp(ssp_id: uuid.UUID, db: AsyncIOMotorDatabase) -> Model:
     entry = await db[MongoDBCollections.SYSTEM_SECURITY_PLANS.value].find_one(
@@ -55,7 +76,7 @@ async def get_ssp(ssp_id: uuid.UUID, db: AsyncIOMotorDatabase) -> Model:
     if entry is None:
         raise HTTPException(status_code=404, detail="System security plan not found")
     else:
-        return Model.model_validate(entry).model_dump(by_alias=True, exclude_none=True)
+        return Model.model_validate(entry)
 
 
 async def get_ssp_by_project(project_id: uuid.UUID, db: AsyncIOMotorDatabase) -> Model:

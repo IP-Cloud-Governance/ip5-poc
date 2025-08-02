@@ -2,12 +2,12 @@ version: '3.8'
 
 services:
   app:
-    image: ghcr.io/ip-cloud-governance/ip5-poc:sha-4b5f2a8
+    image: ip5poc:v0.1
     ports:
-      - "8000:8080"
+      - "8000:8000"
     environment:
       MONGO_URL: mongodb://user:secret@database:27017/
-      ENV: dev
+      ENV: prod
       AZ_USE_SP_AUTHENTICATION: ${AZ_USE_SP_AUTHENTICATION}
       AZ_TENANT_ID: ${AZ_TENANT_ID}
       AZ_CLIENT_ID: ${AZ_CLIENT_ID}

@@ -4,7 +4,7 @@ from fastapi.encoders import jsonable_encoder
 from ip5_poc.core.dependencies import get_api_key, get_az_credentials, get_db
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from azure.identity import DefaultAzureCredential
-from ip5_poc.models.generated_oscal_model import Model5
+from ip5_poc.models.generated_oscal_model import Model5, Model6
 from ip5_poc.models.model import (
     CloudPlattform,
     CloudPlattformPath,
@@ -109,5 +109,50 @@ async def get_ssp_for_project(
     )
 
     return Model5.model_validate(ap).model_dump(
+        by_alias=True, exclude_none=True
+    )
+
+@project_router.get("/{project_id}/assessment-results")
+async def get_assessment_plan_results_for_project(
+    project_id: uuid.UUID, db: AsyncIOMotorDatabase = Depends(get_db)
+):
+    project = await db[MongoDBCollections.PROJECTS.value].find_one({"id": str(project_id)}, {"_id": 0})
+    if project is None:
+        raise HTTPException(
+            status_code=404, detail=f"Project with id {str(project_id)} not found"
+        )
+    
+
+    ap = await db[MongoDBCollections.ASSESSMENT_PLANS.value].find_one(
+        filter={
+            "assessment-plan.metadata.props": {
+                "$elemMatch": {
+                    "name": OscalPropertyIdentifier.CAC_PROJECT_ID.value,
+                    "value": str(project_id)
+                }
+            }
+        },
+        projection={
+            "_id":0
+        }
+    )
+    if ap is None:
+        raise HTTPException(
+            status_code=404, detail=f"Assessment plan for project with id {str(project_id)} not found"
+        )
+    ap = Model5.model_validate(ap).assessment_plan
+
+
+    ap_result = await db[
+            MongoDBCollections.ASSESSMENT_RESULTS.value
+    ].find_one(
+            {"assessment-results.import-ap.href": ap.uuid.root},
+            {"_id": 0}
+    )
+    if ap_result is None:
+        raise HTTPException(
+            status_code=404, detail=f"Assessment plan result for project with id {str(project_id)} not found"
+        )
+    return Model6.model_validate(ap_result).model_dump(
         by_alias=True, exclude_none=True
     )

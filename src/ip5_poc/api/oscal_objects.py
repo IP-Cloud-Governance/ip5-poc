@@ -53,9 +53,9 @@ poc_context = ProjectContextRequest(
 
 @ssp_router.get("/{ssp_id}.json", name="Get System Security Plan")
 async def read_ssp(ssp_id: UUID, db: AsyncIOMotorDatabase = Depends(get_db)):
-    return await oscal_service.get_ssp(db=db, ssp_id=ssp_id)
+    return (await oscal_service.get_ssp(db=db, ssp_id=ssp_id)).model_dump(by_alias=True, exclude_none=True)
 
 
 @ap_router.get("/{assessment_plan_id}")
 async def get_assessment_plan(assessment_plan_id: UUID, db: AsyncIOMotorDatabase = Depends(get_db)):
-    return await oscal_service.get_assessment_plan(db=db, ap_id=assessment_plan_id)
+    return (await oscal_service.get_assessment_plan(db=db, ap_id=assessment_plan_id)).model_dump(by_alias=True, exclude_none=True)

@@ -29,6 +29,20 @@ class ProjectContext(BaseModel):
     azure_paths: list[CloudPlattformPath] = []
     model_config = ConfigDict(frozen=True)
 
+class AzurePolicyDefinitionAssignment(BaseModel):
+    id: str
+    name: str
+
+class AzurePolicyDefinition(BaseModel):
+    id: str
+    name: str
+    plattform: CloudPlattform
+    metadata: dict
+    search_id: str
+    control_id: str
+    assignment_ids: list[str] = []
+    assignment: AzurePolicyDefinitionAssignment | None = None
+
 class CloudRessource(BaseModel):
     plattform: CloudPlattform
 
@@ -59,6 +73,8 @@ class MongoDBCollections(Enum):
     PROJECTS='projects'
     SYSTEM_SECURITY_PLANS='ssps'
     ASSESSMENT_PLANS='assessment-plans'
+    ASSESSMENT_RESULTS='assessment-results'
+    POLICY_DEFINITIONS='policy_definitions'
 
 class OscalPropertyIdentifier(Enum):
     AZURE_REGION='azure-region'
@@ -68,11 +84,18 @@ class OscalPropertyIdentifier(Enum):
     AZURE_RESOURCE_ID='azure-resource-id'
     OSCAL_DERIVED_COMPONENT_DEFINITION_UUID='oscal-derived-component-definition-uuid'
     OSCAL_DERIVED_COMPONENT_UUID='oscal-derived-component-uuid'
+    OSCAL_COMPONENT_ID='oscal-component-id'
+    OSCAL_CONTROL_ID='oscal-control-id'
+    OSCAL_CONTROL_COMPLIANCE_STATE='oscal-control-compliance-state'
     CAC_TASK_TYPE='cac-ap-task-type'
     CAC_PROJECT_ID='cac-project-id'
     CAC_PROJECT_SEARCH_ID='cac-project-serach-id'
     CAC_PROJECT_TYPE='cac-plattform-type'
     CAC_PLATTFORM_TYPE='cac-plattform-type'
+
+class OscalControlComplianceState(Enum):
+    COMPLIANT='compliant'
+    NON_COMPLIANT='non-compliant'
 
 class CacTaskType(Enum):
     CAC_SEARCH_PATH_CHECK='cac-search-path-check'
