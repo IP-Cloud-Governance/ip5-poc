@@ -25,7 +25,7 @@ class PolicySetDefinitions(BaseModel):
 
 
 @trigger_router.post(
-    "/projects/{project_id}/assessment-result",
+    "/projects/{project_id}/assessment-results",
     name="Perform an assessment and create an result based on the latest assessment plan",
 )
 async def analyze_deployment(
