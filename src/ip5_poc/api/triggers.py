@@ -33,7 +33,7 @@ async def analyze_deployment(
     credential: DefaultAzureCredential = Depends(get_az_credentials),
     db: AsyncIOMotorDatabase = Depends(get_db),
 ):
-    await assessment_service.create_assessment(
+    return await assessment_service.create_assessment(
         credential=credential,
         db=db,
         project_id=project_id

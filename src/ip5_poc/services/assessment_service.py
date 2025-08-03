@@ -20,6 +20,7 @@ from ip5_poc.models.generated_oscal_model import (
     AssessmentLog,
     ControlSelection,
     Entry1,
+    Model,
     Model5,
     Model6,
     OscalCompleteOscalApAssessmentPlan,
@@ -299,7 +300,7 @@ async def create_assessment(
                             )
                         ],
                         target=OscalCompleteOscalAssessmentCommonFindingTarget(
-                            target_id=component_id,
+                            target_id=f"component-{component_id}",
                             status=Status1(
                                 state=OscalControlComplianceState.NON_COMPLIANT.value
                             ),
@@ -325,7 +326,7 @@ async def create_assessment(
                             )
                         ],
                         target=OscalCompleteOscalAssessmentCommonFindingTarget(
-                            target_id=component_id,
+                            target_id=f"component-{component_id}",
                             status=Status1(
                                 state=OscalControlComplianceState.COMPLIANT.value
                             ),
@@ -369,18 +370,18 @@ async def create_assessment(
     
     if existing_assessment_result:
         logger.info(f"Assessment result already found for plan {assessment_plan.uuid.root}. Add result to existing result set")
-        await db[
+        updated_ap = await db[
             MongoDBCollections.ASSESSMENT_RESULTS.value
         ].find_one_and_update(
-            {"assessment-results.import-ap.href": assessment_plan.uuid.root},
-            {"$push":{"assessment-results.results":jsonable_encoder(assessment_result.model_dump(by_alias=True, exclude_none=True))}}
+            filter={"assessment-results.import-ap.href": assessment_plan.uuid.root},
+            update={"$push":{"assessment-results.results":jsonable_encoder(assessment_result.model_dump(by_alias=True, exclude_none=True))}},
+            projection={"_id":0},
+            return_document=ReturnDocument.AFTER
         )
+        return Model.model_validate(updated_ap).model_dump(by_alias=True, exclude_none=True)
     else:
         logger.info(f"No assessment result there yet, creating new assessment result for assessment plan {assessment_plan.uuid.root}")
-        await db[
-            MongoDBCollections.ASSESSMENT_RESULTS.value
-        ].insert_one(
-            jsonable_encoder(Model6(
+        new_ap = Model6(
                 assessment_results=OscalCompleteOscalArAssessmentResults(
                         uuid=str(uuid.uuid4()),
                         import_ap=OscalCompleteOscalArImportAp(
@@ -396,9 +397,13 @@ async def create_assessment(
                             assessment_result
                         ]
                     )
-                ).model_dump(by_alias=True, exclude_none=True)
-            )
+        ).model_dump(by_alias=True, exclude_none=True)
+        await db[
+            MongoDBCollections.ASSESSMENT_RESULTS.value
+        ].insert_one(
+            jsonable_encoder(new_ap)
         )
+        return new_ap
 
 def _create_assessment_log_entry(title: str, description: str = "") -> Entry1:
     return Entry1(

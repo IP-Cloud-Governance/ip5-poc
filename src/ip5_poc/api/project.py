@@ -14,6 +14,7 @@ from ip5_poc.models.model import (
     ProjectContextRequest,
 )
 from ip5_poc.services.oscal_service import create_ssp, get_ssp_by_project
+from ip5_poc.services import project_service
 
 project_router = APIRouter(
     prefix="/projects", tags=["Project"], dependencies=[Depends(get_api_key)]
@@ -112,6 +113,20 @@ async def get_ssp_for_project(
         by_alias=True, exclude_none=True
     )
 
+@project_router.delete("/{project_id}", name="Deleting project with all related oscal, policy objects")
+async def delete_project(
+ project_id: uuid.UUID,
+ db: AsyncIOMotorDatabase = Depends(get_db),
+ credential: DefaultAzureCredential = Depends(get_az_credentials),
+):
+    await project_service.delete_project(
+        project_id=project_id,
+        db=db,
+        credential=credential
+    )
+
+
+# TODO move this endpoint to the oscal service
 @project_router.get("/{project_id}/assessment-results")
 async def get_assessment_plan_results_for_project(
     project_id: uuid.UUID, db: AsyncIOMotorDatabase = Depends(get_db)
