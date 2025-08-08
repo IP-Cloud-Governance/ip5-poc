@@ -1,10 +1,24 @@
+from typing import Iterable
 from azure.mgmt.resource import ResourceManagementClient
 from azure.identity import DefaultAzureCredential
-from ip5_poc.models.model import AzureCloudRessource, CloudPlattformPath
+from ip5_poc.models.model import (
+    AzureCloudRessource,
+    AzurePolicyDefinition,
+    CloudPlattformPath,
+)
+from azure.mgmt.policyinsights import PolicyInsightsClient
+from azure.mgmt.policyinsights.models import QueryOptions
+from azure.mgmt.policyinsights.models import PolicyStatesQueryResults
+from azure.mgmt.resource.policy.models import (
+    PolicySetDefinition,
+    PolicyAssignment,
+)
+from azure.mgmt.resource import PolicyClient
 import re
 import logging
 
 logger = logging.getLogger(__name__)
+
 
 def get_subscription_pattern() -> str:
     return r"^/subscriptions/(?P<subscription_id>[0-9a-fA-F-]{36})$"
@@ -54,6 +68,7 @@ def get_az_ressources(
     # Unique resources / without duplicates
     return list({res.ressource.id: res for res in all_ressources}.values())
 
+
 def get_subscription_id_from_path(path: str) -> str | None:
     rg_match = re.fullmatch(get_rg_pattern(), path)
     subscription_match = re.fullmatch(get_subscription_pattern(), path)
@@ -64,3 +79,83 @@ def get_subscription_id_from_path(path: str) -> str | None:
     else:
         logger.info(f"No azure subscription id was found in the path {path}")
         return None
+
+
+def get_policy_results_for_project(
+    az_credential: DefaultAzureCredential,
+    policy_definition: AzurePolicyDefinition,
+    azure_resource_id: str,
+    subscription_id: str,
+) -> Iterable[PolicyStatesQueryResults]:
+    policy_insights_client = PolicyInsightsClient(
+        credential=az_credential, subscription_id=subscription_id
+    )
+    return policy_insights_client.policy_states.list_query_results_for_resource(
+        resource_id=azure_resource_id,
+        policy_states_resource="latest",
+        query_options=QueryOptions(
+            filter=f"PolicyAssignmentId eq '{policy_definition.assignment.id}'"
+        ),
+    )
+
+
+def get_assignment_by_id(
+    az_credential: DefaultAzureCredential,
+    subscription_id: str,
+    policy_definition: AzurePolicyDefinition,
+):
+    policy_client = PolicyClient(
+        credential=az_credential, subscription_id=subscription_id
+    )
+    return policy_client.policy_assignments.get_by_id(
+        policy_assignment_id=policy_definition.assignment_ids[0]
+    )
+
+
+def create_policy_assignment(
+    az_credential: DefaultAzureCredential,
+    subscription_id: str,
+    policy_definition: AzurePolicyDefinition,
+    policy_initative_id: str,
+    azure_path: CloudPlattformPath,
+) -> PolicyAssignment:
+    policy_client = PolicyClient(
+        credential=az_credential, subscription_id=subscription_id
+    )
+    return policy_client.policy_assignments.create(
+        scope=azure_path.path,
+        policy_assignment_name=f"assignment-{policy_definition.name}",
+        parameters=PolicyAssignment(
+            policy_definition_id=policy_initative_id,
+            display_name=f"assignment-{policy_definition.name}",
+            metadata=policy_definition.metadata,
+        ),
+    )
+
+
+def create_policy(
+    az_credential: DefaultAzureCredential,
+    subscription_id: str,
+    initiative_definition: PolicySetDefinition,
+    policy_set_definition_name: str,
+):
+    policy_client = PolicyClient(
+        credential=az_credential, subscription_id=subscription_id
+    )
+    return policy_client.policy_set_definitions.create_or_update(
+        policy_set_definition_name=policy_set_definition_name,
+        parameters=initiative_definition,
+    )
+
+
+def get_policy(
+    az_credential: DefaultAzureCredential,
+    subscription_id: str,
+    policy_set_definition_name: str,
+):
+    policy_client = PolicyClient(
+        credential=az_credential, subscription_id=subscription_id
+    )
+    return policy_client.policy_definitions.get(
+        policy_definition_name=policy_set_definition_name
+    )

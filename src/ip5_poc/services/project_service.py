@@ -2,8 +2,8 @@ from uuid import UUID
 from fastapi import HTTPException
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from azure.identity import DefaultAzureCredential
-from ip5_poc.models.generated_oscal_model import Model, Model5
-from ip5_poc.models.model import AzurePolicyDefinition, AzurePolicyDefinitionAssignment, MongoDBCollections, OscalPropertyIdentifier, ProjectContext
+from ip5_poc.models.generated_oscal_model import Model5
+from ip5_poc.models.model import AzurePolicyDefinition, MongoDBCollections, OscalPropertyIdentifier, ProjectContext
 from ip5_poc.services.azure_service import get_subscription_id_from_path
 from azure.mgmt.resource import PolicyClient
 import logging
